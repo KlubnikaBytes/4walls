@@ -1,47 +1,135 @@
-import { Link } from 'react-router-dom';
-import ThreeDHero from '../components/ThreeDHero';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import { getProperties } from '../utils/data';
 
+const slides = [
+  {
+    id: 1,
+    title: 'Mani Casadona',
+    subtitle: "New Town's premier IT and commercial hub.",
+    image: '/mani.jpg',
+    link: '/mani-casadona',
+    buttonText: 'Explore Properties →',
+  },
+  {
+    id: 2,
+    title: 'Ecospace Business Park',
+    subtitle: 'A highly sought-after green business park in New Town.',
+    image: '/ecospace.jpg',
+    link: '/ecospace',
+    buttonText: 'Explore Properties →',
+  },
+  {
+    id: 3,
+    title: 'Interior Designing',
+    subtitle: 'We build intelligent, beautiful, and futuristic workspaces.',
+    image: '/interior-future.png',
+    link: '/interior',
+    buttonText: 'Explore Interior Designs →',
+  }
+];
+
 export default function Home() {
   const latestInterior = getProperties(4, 2); 
-  
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 5000); // 5 seconds timer
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeSlide = slides[currentSlide];
+
   return (
     <>
-      {/* 3D Hero */}
-      <div className="hero">
-        <div style={{ zIndex: 10 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(169, 125, 47, 0.1)', border: '1px solid var(--brass)', color: 'var(--ink)', padding: '6px 16px', borderRadius: '40px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '24px' }}>
+      {/* Slider Hero */}
+      <div 
+        className="hero-slider"
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '80vh',
+          minHeight: '600px',
+          overflow: 'hidden',
+          cursor: 'pointer'
+        }}
+        onClick={() => navigate(activeSlide.link)}
+      >
+        {slides.map((slide, index) => (
+          <div
+            key={slide.id}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              opacity: index === currentSlide ? 1 : 0,
+              transition: 'opacity 1s ease-in-out',
+              backgroundImage: `url('${slide.image}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            {/* Gradient Overlay for Text Readability */}
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to right, rgba(22, 35, 31, 0.9) 0%, rgba(22, 35, 31, 0.4) 50%, transparent 100%)'
+            }} />
+          </div>
+        ))}
+
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '48px',
+          transform: 'translateY(-50%)',
+          zIndex: 10,
+          color: 'var(--white)',
+          maxWidth: '600px',
+          pointerEvents: 'none' // Let clicks pass through to the slider wrapper
+        }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255, 0.1)', border: '1px solid rgba(255,255,255,0.3)', padding: '6px 16px', borderRadius: '40px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '24px' }}>
             <span style={{ display: 'inline-block', width: '8px', height: '8px', background: 'var(--brass)', borderRadius: '50%' }}></span>
             Kolkata's Only End-to-End Commercial Partner
           </div>
-          <h1>
-            Elevate your business in Kolkata's finest hubs.
+          <h1 style={{ fontSize: '64px', fontWeight: 600, lineHeight: 1.1, marginBottom: '20px', transition: 'all 0.5s', transform: 'translateY(0)' }}>
+            {activeSlide.title}
           </h1>
-          <p className="sub">
-            We specialize in exclusive properties at Mani Casadona and Ecospace, alongside world-class interior designing to make it yours.
+          <p style={{ fontSize: '18px', color: '#cfd8d0', lineHeight: 1.6, marginBottom: '40px' }}>
+            {activeSlide.subtitle}
           </p>
-          <div className="hero-cta-stacked" style={{ display: 'flex', flexDirection: 'column', gap: '28px', borderTop: '1px solid var(--line)', paddingTop: '32px' }}>
-            <div>
-              <div className="eyebrow" style={{ fontSize: '11px', marginBottom: '14px', color: 'var(--ink-soft)' }}>Explore Featured Spaces</div>
-              <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <Link to="/mani-casadona" className="btn-brass" style={{ textDecoration: 'none', padding: '14px 28px', fontSize: '11.5px', background: 'var(--brass)' }}>Mani Casadona</Link>
-                <Link to="/ecospace" className="btn-brass" style={{ textDecoration: 'none', background: 'var(--ink)', padding: '14px 28px', fontSize: '11.5px' }}>Ecospace</Link>
-              </div>
-            </div>
-            <div>
-              <div className="eyebrow" style={{ fontSize: '11px', marginBottom: '14px', color: 'var(--ink-soft)' }}>Explore Services</div>
-              <Link to="/interior" className="btn-brass" style={{ display: 'inline-block', textDecoration: 'none', background: 'var(--ink-soft)', padding: '14px 28px', fontSize: '11.5px' }}>Interior Designing</Link>
-            </div>
-          </div>
-          <div style={{ display: 'flex', gap: '32px', flexWrap: 'wrap', marginTop: '40px', paddingTop: '28px', borderTop: '1px solid rgba(201, 194, 178, 0.5)' }}>
-             <div><div style={{ fontFamily: 'Fraunces', fontSize: '28px', fontWeight: 600, color: 'var(--ink)' }}>3.8M<span style={{ color: 'var(--brass)' }}>+</span></div><div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink-soft)', fontFamily: 'IBM Plex Mono' }}>Sq.Ft Delivered</div></div>
-             <div><div style={{ fontFamily: 'Fraunces', fontSize: '28px', fontWeight: 600, color: 'var(--ink)' }}>640<span style={{ color: 'var(--brass)' }}>+</span></div><div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink-soft)', fontFamily: 'IBM Plex Mono' }}>Transactions</div></div>
-             <div><div style={{ fontFamily: 'Fraunces', fontSize: '28px', fontWeight: 600, color: 'var(--ink)' }}>100<span style={{ color: 'var(--brass)' }}>%</span></div><div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--ink-soft)', fontFamily: 'IBM Plex Mono' }}>In-House Execution</div></div>
+          <div className="btn-brass" style={{ display: 'inline-block', padding: '16px 32px', fontSize: '13px' }}>
+            {activeSlide.buttonText}
           </div>
         </div>
-        <div className="hero-art" style={{ position: 'relative', perspective: '1000px' }}>
-          <ThreeDHero />
+
+        {/* Slider Navigation Dots */}
+        <div style={{ position: 'absolute', bottom: '40px', left: '48px', display: 'flex', gap: '12px', zIndex: 10 }}>
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentSlide(index);
+              }}
+              style={{
+                width: index === currentSlide ? '32px' : '12px',
+                height: '12px',
+                borderRadius: '6px',
+                background: index === currentSlide ? 'var(--brass)' : 'rgba(255,255,255,0.4)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease'
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
 
