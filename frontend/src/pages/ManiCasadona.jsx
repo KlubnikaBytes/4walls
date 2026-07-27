@@ -21,7 +21,7 @@ export default function ManiCasadona() {
 
   return (
     <div className="mc-page">
-      <div className="section-head" style={{ padding: '64px 48px 24px', maxWidth: '1400px', margin: '0 auto' }}>
+      <div className="section-head" style={{ padding: '64px 24px 24px', maxWidth: '1400px', margin: '0 auto' }}>
         <h2>Mani Casadona Office Details</h2>
         <p>Explore premium commercial spaces in New Town's most iconic IT park. Select a property below to view detailed amenities and photos.</p>
       </div>

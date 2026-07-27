@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import { getProperties } from '../utils/data';
+import { interiorAssets } from '../utils/interiorData';
 
 const slides = [
   {
@@ -226,14 +227,28 @@ export default function Home() {
         <div><div className="num">210+</div><div class="lbl">Companies Served</div></div>
       </div>
 
-      {/* Interior Projects (Original style) */}
-      <section>
-        <div className="section-head">
-          <h2>Interior projects</h2>
-          <p>From bare shell to move-in ready — see recent fit-outs.</p>
+      {/* Interior Projects (New Graphical Style) */}
+      <section style={{ background: '#111', color: '#fff', padding: '80px 24px' }}>
+        <div className="section-head" style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '40px' }}>
+          <h2 style={{ color: '#fff' }}>Futuristic Workspaces</h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)' }}>From bare shell to move-in ready — see recent fit-outs.</p>
         </div>
-        <div className="card-grid">
-          {latestInterior.map((p, i) => <PropertyCard key={i} {...p} />)}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
+          {interiorAssets.filter(a => a.type === 'image').slice(0, 8).map((asset, i) => (
+            <div key={i} style={{ 
+              borderRadius: '12px', 
+              overflow: 'hidden', 
+              aspectRatio: '4/3', 
+              backgroundImage: `url('${asset.path}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(255,255,255,0.05)'
+            }} />
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+          <Link to="/interior" className="btn-brass" style={{ textDecoration: 'none' }}>View Full Interior Gallery →</Link>
         </div>
       </section>
 
