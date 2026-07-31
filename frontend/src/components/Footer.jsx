@@ -5,7 +5,7 @@ export default function Footer() {
     <div className="site-footer">
       <div className="footer-grid">
         <div>
-          <div className="flogo">4Walls<span style={{color: '#A97D2F'}}>.</span></div>
+          <Link to="/" style={{ display: 'inline-block', marginBottom: '16px' }}><img src="/logo.png" alt="4Walls Property Solutions" style={{ height: '96px', width: 'auto', display: 'block' }} /></Link>
           <p>Commercial office solutions across Kolkata — leasing, investment, interior and portfolio advisory under one roof.</p>
         </div>
         <div>

@@ -28,7 +28,7 @@ h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:-0.01em;}
 /* ===== site header ===== */
 .site-header{
   display:flex; align-items:center; justify-content:space-between;
-  padding:20px 48px; background:var(--paper); border-bottom:1px solid var(--line);
+  padding:12px 48px; background:var(--paper); border-bottom:1px solid var(--line);
 }
 .logo{display:flex; align-items:center; gap:10px; text-decoration: none;}
 .logo .mark{

@@ -10,8 +10,7 @@ export default function Header() {
     <>
       <div className="site-header">
         <Link to="/" className="logo" onClick={closeMenu}>
-          <div className="mark">4W</div>
-          <div className="word">4Walls<span>.</span></div>
+          <img src="/logo.png" alt="4Walls Property Solutions" style={{ height: '80px', width: 'auto', display: 'block' }} />
         </Link>
 
         {/* Desktop Nav */}
