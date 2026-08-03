@@ -308,6 +308,26 @@ section{padding:64px 48px; border-top:1px solid var(--line);}
     width: 100%;
   }
 
+  /* Hero Search Responsive Strip - Slick Mobile */
+  .hero-search-strip {
+    flex-direction: row !important;
+    align-items: flex-end !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+  }
+  .hero-search-divider, .advanced-filter {
+    display: none !important;
+  }
+  .keyword-field {
+    flex: 1 1 auto !important;
+  }
+  .hero-search-btn {
+    width: auto !important;
+    margin-left: 0 !important;
+    padding: 10px 16px !important;
+    flex: 0 0 auto !important;
+  }
+
   /* Fix for the futuristic box */
   .futuristic-box {
     flex: 1 1 100% !important;
@@ -315,6 +335,22 @@ section{padding:64px 48px; border-top:1px solid var(--line);}
   
   .threed-container {
     height: 320px;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .hero-search-strip {
+    flex-wrap: wrap !important;
+  }
+  .hero-search-divider {
+    display: none !important;
+  }
+  .hero-search-strip > div {
+    flex: 1 1 45% !important;
+  }
+  .hero-search-btn {
+    margin-left: 0 !important;
+    flex: 1 1 100% !important;
   }
 }
 

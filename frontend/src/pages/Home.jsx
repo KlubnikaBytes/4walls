@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import { getProperties } from '../utils/data';
 import { interiorAssets } from '../utils/interiorData';
+import HeroSearch from '../components/HeroSearch';
 
 const slides = [
   {
@@ -47,6 +48,9 @@ export default function Home() {
 
   return (
     <>
+      {/* Hero Search */}
+      <HeroSearch />
+
       {/* Slider Hero */}
       <div 
         className="hero-slider"
