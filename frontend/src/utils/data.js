@@ -1,6 +1,8 @@
 export const propertyNames = [
   ["Mani Casadona", "New Town", "1,500 sqft", "Lease", "IT Park"],
   ["Ecospace Business Park", "New Town", "4,200 sqft", "Lease", "IT Park"],
+  ["Co-Working Spaces", "Kolkata", "Flexible sqft", "Coworking", "Coworking"],
+  ["My Office — Private Units", "Kolkata", "500 sqft", "Lease", "Private Office"],
 ];
 
 export function getProperties(n, offset = 0) {

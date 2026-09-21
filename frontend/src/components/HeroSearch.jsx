@@ -30,26 +30,35 @@ export default function HeroSearch() {
 
     propertyNames.forEach(p => {
       const [title, location, sqft, stat, pType] = p;
+      const isFlexible = sqft === 'Flexible sqft';
       
       let match = true;
       if (keyword.trim() && !p.some(field => field && field.toLowerCase().includes(lowerKeyword))) match = false;
       if (status !== 'Any Status' && stat !== status) match = false;
       if (propertyType !== 'All Types' && pType !== propertyType) match = false;
       
-      if (size !== 'Any Size') {
+      if (size !== 'Any Size' && !isFlexible) {
         const numSqft = parseInt(sqft.replace(/,/g, '').replace(' sqft', ''));
         if (size === '< 2,000 sqft' && numSqft >= 2000) match = false;
         if (size === '2,000 - 5,000 sqft' && (numSqft < 2000 || numSqft > 5000)) match = false;
         if (size === '5,000 - 10,000 sqft' && (numSqft < 5000 || numSqft > 10000)) match = false;
         if (size === '> 10,000 sqft' && numSqft <= 10000) match = false;
       }
+      // Flexible-sqft entries are skipped when a size filter is active
+      if (size !== 'Any Size' && isFlexible) match = false;
 
       if (match) {
+        // Resolve link
+        let link = '/properties';
+        if (title.toLowerCase().includes('mani')) link = '/mani-casadona';
+        else if (title.toLowerCase().includes('ecospace')) link = '/ecospace';
+        else if (title.toLowerCase().includes('co-work') || title.toLowerCase().includes('my office')) link = '/manage-space';
+
         newResults.push({
           type: pType || 'Property',
           title: title,
-          desc: `${location} • ${sqft} • ${stat}`,
-          link: title.toLowerCase().includes('mani') ? '/mani-casadona' : title.toLowerCase().includes('ecospace') ? '/ecospace' : '/properties'
+          desc: `${location} • ${isFlexible ? 'Flexible Sizing' : sqft} • ${stat}`,
+          link,
         });
       }
     });
@@ -115,6 +124,7 @@ export default function HeroSearch() {
             <option>Office Space</option>
             <option>IT Park</option>
             <option>Coworking</option>
+            <option>Private Office</option>
             <option>Retail</option>
             <option>Interior Design</option>
           </select>
