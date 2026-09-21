@@ -144,7 +144,7 @@ export default function Home() {
           <h2 style={{ fontSize: '36px' }}>Featured spaces</h2>
           <p style={{ fontSize: '15px' }}>Premium commercial properties and IT hubs.</p>
         </div>
-        <div className="card-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+        <div className="card-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
           
           <Link to="/mani-casadona" className="card hover-card" style={{ textDecoration: 'none', color: 'inherit', border: 'none', background: 'var(--paper)', borderRadius: '12px', overflow: 'hidden' }}>
             <div className="thumb" style={{ height: '320px', backgroundImage: 'url("/mani.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -178,6 +178,29 @@ export default function Home() {
 
               <div className="mono" style={{ color: 'var(--brass)', marginTop: '16px', fontSize: '12px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 View Properties <span>→</span>
+              </div>
+            </div>
+          </Link>
+
+          <Link to="/manage-space" className="card hover-card" style={{ textDecoration: 'none', color: 'inherit', border: 'none', background: 'var(--paper)', borderRadius: '12px', overflow: 'hidden' }}>
+            <div className="thumb" style={{ height: '320px', backgroundImage: 'url("https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&auto=format&fit=crop")', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(169,125,47,0.55) 0%, transparent 60%)' }} />
+              <div style={{ position: 'absolute', bottom: 16, left: 16, display: 'flex', gap: 6 }}>
+                <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Co-Working</span>
+                <span style={{ background: 'rgba(36,66,58,0.85)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Private Offices</span>
+              </div>
+            </div>
+            <div className="body" style={{ padding: '32px' }}>
+              <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Manage Space</h3>
+              <p style={{ color: 'var(--ink-soft)', lineHeight: 1.6, fontSize: '15px' }}>Flexible co-working desks & fully managed private office suites — move-in ready across Kolkata.</p>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
+                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Space Types</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Co-Work & Private</div></div>
+                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Ready to Move</div></div>
+              </div>
+
+              <div className="mono" style={{ color: 'var(--brass)', marginTop: '16px', fontSize: '12px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                Explore Spaces <span>→</span>
               </div>
             </div>
           </Link>

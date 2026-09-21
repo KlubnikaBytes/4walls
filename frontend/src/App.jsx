@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import ManiCasadona from './pages/ManiCasadona';
@@ -11,11 +12,21 @@ import KnowledgeCentre from './pages/KnowledgeCentre';
 import About from './pages/About';
 import Careers from './pages/Careers';
 import Contact from './pages/Contact';
+import ManageSpace from './pages/ManageSpace';
 import './index.css';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -29,6 +40,7 @@ function App() {
           <Route path="contact" element={<Contact />} />
           <Route path="mani-casadona" element={<ManiCasadona />} />
           <Route path="ecospace" element={<Ecospace />} />
+          <Route path="manage-space" element={<ManageSpace />} />
         </Route>
       </Routes>
     </BrowserRouter>
