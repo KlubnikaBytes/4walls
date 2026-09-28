@@ -220,10 +220,10 @@ section{padding:64px 48px; border-top:1px solid var(--line);}
 
 .mobile-nav-overlay {
   position: fixed;
-  top: 67px;
+  top: 72px;
   left: 0;
   width: 100%;
-  height: calc(100vh - 67px);
+  height: calc(100vh - 72px);
   background: var(--paper);
   z-index: 40;
   display: flex;
