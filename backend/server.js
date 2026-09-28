@@ -26,7 +26,8 @@ app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
   
   try {
-    await transporter.sendMail({
+    // Fire and forget: don't await the email sending so the frontend responds instantly
+    transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.RECEIVER_EMAIL,
       subject: `New Consultation Request: ${interest}`,
@@ -39,11 +40,11 @@ Interest: ${interest}
 Message:
 ${message}
       `,
-    });
+    }).catch(error => console.error('Render Email Error:', error));
 
     res.status(200).json({ success: true, message: 'Consultation request received successfully.' });
   } catch (error) {
-    console.error('Render Email Error:', error);
+    console.error('Server Error:', error);
     res.status(500).json({ success: false, message: 'Failed to send.' });
   }
 });
