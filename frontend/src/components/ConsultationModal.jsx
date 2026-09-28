@@ -75,11 +75,11 @@ export default function ConsultationModal() {
           >
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Name</label>
-              <input type="text" name="name" required minLength={2} title="Please enter your full name" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
+              <input type="text" name="name" required style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Email</label>
-              <input type="email" name="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" title="Please enter a valid email address" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
+              <input type="email" name="email" required style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Phone</label>
@@ -87,10 +87,7 @@ export default function ConsultationModal() {
                 type="tel" 
                 name="phone" 
                 required 
-                pattern="[0-9]{10}" 
-                maxLength={10}
-                onInput={(e) => { e.target.value = e.target.value.replace(/[^0-9]/g, ''); }}
-                title="Please enter a valid 10-digit phone number" 
+                maxLength={15}
                 style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} 
               />
             </div>
