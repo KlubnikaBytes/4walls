@@ -141,7 +141,7 @@ export default function Home() {
       {/* Featured Spaces (Mani & Ecospace only) */}
       <section style={{ background: 'var(--white)' }} className="py-large">
         <div className="section-head" style={{ marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '36px' }}>Featured spaces</h2>
+          <h2 style={{ fontSize: '36px' }}>Office Space</h2>
           <p style={{ fontSize: '15px' }}>Premium commercial properties and IT hubs.</p>
         </div>
         <div className="card-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
@@ -155,7 +155,7 @@ export default function Home() {
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Available Space</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>1,500 - 12,000 sq.ft</div></div>
-                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Ready to Fit-out</div></div>
+                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Ready-to-Move</div></div>
               </div>
 
               <div className="mono" style={{ color: 'var(--brass)', marginTop: '16px', fontSize: '12px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -173,7 +173,7 @@ export default function Home() {
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Available Space</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>2,500 - 25,000 sq.ft</div></div>
-                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Fully Furnished</div></div>
+                <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Unfurnished, Fully furnished, Ready-to-Move</div></div>
               </div>
 
               <div className="mono" style={{ color: 'var(--brass)', marginTop: '16px', fontSize: '12px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -191,7 +191,7 @@ export default function Home() {
               </div>
             </div>
             <div className="body" style={{ padding: '32px' }}>
-              <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Manage Space</h3>
+              <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Managed Space</h3>
               <p style={{ color: 'var(--ink-soft)', lineHeight: 1.6, fontSize: '15px' }}>Flexible co-working desks & fully managed private office suites — move-in ready across Kolkata.</p>
               
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
@@ -279,6 +279,10 @@ export default function Home() {
         </div>
       </section>
 
+      
+      
+
+
       {/* Testimonials (Correct Original Style) */}
       <section style={{ paddingTop: 0, borderTop: 'none' }}>
         <div className="section-head"><h2>What clients say</h2><p></p></div>
@@ -310,8 +314,39 @@ export default function Home() {
       {/* CTA */}
       <div className="cta-strip">
         <h3>Ready to find your next office space?</h3>
+        <p style={{ color: "var(--ink)", marginBottom: "20px", fontSize: "18px" }}>Call us at <strong>+91 90518 06000</strong> or book a site visit.</p>
         <Link to="/contact" className="btn-brass" style={{ textDecoration: 'none' }}>Book a Site Visit →</Link>
       </div>
+      {/* FAB Book Consultation */}
+      
+      <button 
+        onClick={() => window.dispatchEvent(new Event('open-consultation'))}
+        style={{ 
+          position: 'fixed', 
+          bottom: '30px', 
+          right: '30px', 
+          background: 'var(--brass)', 
+          color: 'var(--ink)', 
+          padding: '16px', 
+          borderRadius: '50%', 
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000,
+          border: 'none',
+          cursor: 'pointer',
+          transition: 'transform 0.3s'
+        }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        title="Book a Consultation"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </button>
+
     </>
   );
 }

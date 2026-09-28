@@ -24,7 +24,7 @@ export default function Header() {
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
         </div>
-        <Link to="/contact" className="nav-cta desktop-nav">Talk to Expert</Link>
+        <button onClick={() => window.dispatchEvent(new Event('open-consultation'))} className="nav-cta desktop-nav" style={{ cursor: 'pointer', border: 'none' }}>Book a Consultation</button>
 
         {/* Mobile Menu Button */}
         <button 
@@ -57,7 +57,7 @@ export default function Header() {
         <NavLink to="/knowledge" onClick={closeMenu}>Knowledge Centre</NavLink>
         <NavLink to="/about" onClick={closeMenu}>About</NavLink>
         <NavLink to="/contact" onClick={closeMenu}>Contact</NavLink>
-        <Link to="/contact" className="nav-cta" onClick={closeMenu}>Talk to Expert</Link>
+        <button onClick={() => { closeMenu(); window.dispatchEvent(new Event('open-consultation')); }} className="nav-cta" style={{ cursor: 'pointer', border: 'none', width: '100%', marginTop: '16px' }}>Book a Consultation</button>
       </div>
     </>
   );

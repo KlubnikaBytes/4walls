@@ -313,7 +313,15 @@ export default function Properties() {
                 </div>
                 
                 <div style={{ padding: '24px' }}>
-                  <h3 style={{ fontSize: '22px', marginBottom: '8px', color: '#fff' }}>{p.name}</h3>
+                  <h3 style={{ fontSize: '22px', marginBottom: '4px', color: '#fff' }}>{p.name}</h3>
+                  <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.6)', marginBottom: '12px' }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '4px', verticalAlign: 'text-bottom' }}>
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    New Town, Kolkata
+                  </div>
+
                   <div style={{ fontSize: '18px', color: 'var(--brass)', marginBottom: '20px' }}>{p.rent} <span style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)' }}>/ month</span></div>
                   
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px' }}>

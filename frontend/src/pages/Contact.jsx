@@ -13,11 +13,10 @@ export default function Contact() {
           <div className="f"><label>Message</label><textarea className="inp" style={{ height: '60px' }}></textarea></div>
           <button className="btn-brass">Send Enquiry</button>
         </div>
-        <div className="map-block">Google Map — New Town, Kolkata</div>
+        <div className="map-block" style={{ padding: 0, overflow: 'hidden' }}><iframe src="https://maps.google.com/maps?q=22.5859932,88.4865422+(Mani+Casadona)&t=&z=16&ie=UTF8&iwloc=B&output=embed" width="100%" height="100%" frameBorder="0" style={{ border: 0, minHeight: '300px' }} allowFullScreen="" aria-hidden="false" tabIndex="0"></iframe></div>
       </div>
       <div className="info-strip" style={{ margin: '0 48px' }}>
-        <div className="info-item"><span className="k">WhatsApp</span><span className="v">+91 98XXX XXXXX</span></div>
-        <div className="info-item"><span className="k">Phone</span><span className="v">+91 33 XXXX XXXX</span></div>
+        <div className="info-item"><span className="k">Phone / WhatsApp</span><span className="v">+91 90518 06000</span></div>
         <div className="info-item"><span className="k">Email</span><span className="v">hello@4walls.in</span></div>
         <div className="info-item"><span className="k">Office Timing</span><span className="v">Mon–Sat, 10am–7pm</span></div>
       </div>

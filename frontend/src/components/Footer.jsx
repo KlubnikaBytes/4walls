@@ -36,9 +36,9 @@ export default function Footer() {
         <div>
           <b>Contact</b>
           <ul>
-            <li>+91 98XXX XXXXX</li>
+            <li>+91 90518 06000</li>
             <li>hello@4walls.in</li>
-            <li>New Town, Kolkata</li>
+            <li>11F, 04, Street Number 372, Action Area I, IIF, New Town, Kolkata, Chakpachuria, West Bengal 700160</li>
           </ul>
         </div>
       </div>
