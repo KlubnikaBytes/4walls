@@ -311,13 +311,13 @@ const allItems = [
 ];
 
 const CATEGORY_COLORS = {
-  "Co-Working": "#A97D2F",
+  "Co-Working": "#2563eb",
   "Private Workspace": "#24423A",
 };
 
 // ── Detail Modal ──────────────────────────────────────────────────────────────
 function DetailModal({ item, onClose }) {
-  const accent = CATEGORY_COLORS[item.category] || "#A97D2F";
+  const accent = CATEGORY_COLORS[item.category] || "#2563eb";
 
   React.useEffect(() => {
     const fn = (e) => { if (e.key === "Escape") onClose(); };
@@ -423,7 +423,7 @@ export default function ManageSpace() {
     <>
       {/* Hero */}
       <div style={{ position: "relative", overflow: "hidden", background: "var(--ink)", color: "var(--white)", padding: "100px 48px 80px", minHeight: 400, display: "flex", alignItems: "center" }}>
-        <div style={{ position: "absolute", top: "-30%", right: "-10%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(169,125,47,0.2) 0%, transparent 70%)", zIndex: 0 }} />
+        <div style={{ position: "absolute", top: "-30%", right: "-10%", width: 600, height: 600, borderRadius: "50%", background: "radial-gradient(circle, rgba(37, 99, 235,0.2) 0%, transparent 70%)", zIndex: 0 }} />
         <div style={{ position: "absolute", bottom: "-20%", left: "5%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(36,66,58,0.5) 0%, transparent 70%)", zIndex: 0 }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 800 }}>
           <div className="eyebrow" style={{ color: "var(--brass)" }}>Managed Space</div>
@@ -455,7 +455,7 @@ export default function ManageSpace() {
       <section style={{ background: "var(--white)", padding: "56px 48px 80px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 20 }}>
           {filtered.map((item, i) => {
-            const accent = CATEGORY_COLORS[item.category] || "#A97D2F";
+            const accent = CATEGORY_COLORS[item.category] || "#2563eb";
             return (
               <button
                 key={i}

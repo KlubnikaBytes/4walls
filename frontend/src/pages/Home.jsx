@@ -184,7 +184,7 @@ export default function Home() {
 
           <Link to="/manage-space" className="card hover-card" style={{ textDecoration: 'none', color: 'inherit', border: 'none', background: 'var(--paper)', borderRadius: '12px', overflow: 'hidden' }}>
             <div className="thumb" style={{ height: '320px', backgroundImage: 'url("https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&auto=format&fit=crop")', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(169,125,47,0.55) 0%, transparent 60%)' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(37, 99, 235,0.55) 0%, transparent 60%)' }} />
               <div style={{ position: 'absolute', bottom: 16, left: 16, display: 'flex', gap: 6 }}>
                 <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Co-Working</span>
                 <span style={{ background: 'rgba(36,66,58,0.85)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Private Offices</span>
@@ -209,7 +209,7 @@ export default function Home() {
 
       {/* Futuristic Interior Design Section */}
       <section style={{ background: 'var(--ink)', color: 'var(--white)', position: 'relative', overflow: 'hidden' }} className="py-xlarge">
-        <div style={{ position: 'absolute', top: '-50%', left: '-20%', width: '140%', height: '200%', background: 'radial-gradient(circle at center, rgba(169, 125, 47, 0.15) 0%, transparent 60%)', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', top: '-50%', left: '-20%', width: '140%', height: '200%', background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.15) 0%, transparent 60%)', zIndex: 0 }}></div>
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
           <div className="futuristic-box" style={{ flex: '1 1 400px' }}>
             <div className="eyebrow" style={{ color: 'var(--brass)' }}>Future Workspaces</div>
