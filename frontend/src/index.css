@@ -28,7 +28,16 @@ h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:-0.01em;}
 /* ===== site header ===== */
 .site-header{
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 48px; background:var(--paper); border-bottom:1px solid var(--line);
+  padding:12px 48px; background:rgba(255, 255, 255, 0.85); border-bottom:1px solid var(--line);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  position: sticky; top: 0; z-index: 100;
+  transition: transform 0.3s ease-in-out, background 0.3s ease;
+}
+.site-header.hidden {
+  transform: translateY(-100%);
+}
+.site-header.visible {
+  transform: translateY(0);
 }
 .logo{display:flex; align-items:center; gap:10px; text-decoration: none;}
 .logo .mark{
@@ -268,7 +277,7 @@ section{padding:64px 48px; border-top:1px solid var(--line);}
   .listing-shell{grid-template-columns:1fr;}
   .filter-col{border-right:none; border-bottom:1px solid var(--line);}
   .contact-grid,.split{grid-template-columns:1fr;}
-  .site-header{padding:16px 20px; position: sticky; top: 0; z-index: 50;}
+  .site-header{padding:16px 20px;}
   
   .desktop-nav { display: none !important; }
   .mobile-menu-btn { display: block !important; }

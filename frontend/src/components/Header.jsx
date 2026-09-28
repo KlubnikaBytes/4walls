@@ -1,14 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const controlNavbar = () => {
+      if (window.scrollY > lastScrollY && window.scrollY > 80) { 
+        setShow(false);
+        setIsMobileMenuOpen(false);
+      } else {
+        setShow(true);
+      }
+      setLastScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', controlNavbar);
+    return () => window.removeEventListener('scroll', controlNavbar);
+  }, [lastScrollY]);
 
   const closeMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <>
-      <div className="site-header">
+      <div className={`site-header ${show ? 'visible' : 'hidden'}`}>
         <Link to="/" className="logo" onClick={closeMenu}>
           <img src="/logo.png" alt="4Walls Property Solutions" style={{ height: 'clamp(40px, 8vw, 60px)', width: 'auto', display: 'block' }} />
         </Link>
