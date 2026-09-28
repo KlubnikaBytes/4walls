@@ -32,11 +32,11 @@ export default function BuildingSVG({ cols, rows, accentIdx, h = 160 }) {
         width="292"
         height={h * 0.62 + 8}
         fill="none"
-        stroke="#2563eb"
+        stroke="#1f95a4"
         strokeWidth="1.5"
       />
       {bars}
-      <line x1="0" y1={h * 0.9} x2="300" y2={h * 0.9} stroke="#2563eb" strokeWidth="1" />
+      <line x1="0" y1={h * 0.9} x2="300" y2={h * 0.9} stroke="#1f95a4" strokeWidth="1" />
     </svg>
   );
 }

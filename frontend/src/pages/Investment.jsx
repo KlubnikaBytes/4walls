@@ -12,7 +12,7 @@ export default function Investment() {
   return (
     <div style={{ background: 'var(--ink)', color: 'var(--white)', minHeight: '100vh', paddingBottom: '80px' }}>
       <section style={{ paddingTop: '80px', paddingBottom: '40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-        <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(37, 99, 235, 0.4)' }}>Commercial Office Investment</div>
+        <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Commercial Office Investment</div>
         <h2 style={{ fontSize: '48px', maxWidth: '800px', lineHeight: 1.1, color: '#fff', marginTop: '16px' }}>Own the space businesses actually need.</h2>
         <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '600px', marginTop: '24px', fontSize: '18px' }}>
           Explore high-yield commercial assets across Kolkata's top IT hubs. Pre-leased and ready-to-fit options available for immediate ROI.
@@ -86,12 +86,12 @@ export default function Investment() {
       <section style={{ paddingTop: '64px', borderTop: 'none', paddingBottom: 0 }}>
         <div className="quote-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
           <div className="quote" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(37, 99, 235, 0.4)' }}>Case Study</span>
+            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Case Study</span>
             <p style={{ color: '#fff' }}>"Helped a Sector V tenant scale from 2,000 to 5,000 sqft without breaking their lease terms, securing a 9% return for the new owner."</p>
             <div className="who" style={{ color: 'rgba(255,255,255,0.5)' }}>Problem → Solution → Result</div>
           </div>
           <div className="quote" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(37, 99, 235, 0.4)' }}>Tool</span>
+            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Tool</span>
             <p style={{ color: '#fff' }}>Rental yield calculator — estimate returns on any commercial asset before you commit to the purchase.</p>
             <div className="who" style={{ color: 'rgba(255,255,255,0.5)' }}>Open calculator →</div>
           </div>

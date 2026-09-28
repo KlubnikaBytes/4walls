@@ -194,7 +194,7 @@ export default function Properties() {
             font-size: 15px;
             font-weight: 600;
             z-index: 1998; /* Below overlay */
-            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 8px 24px rgba(31, 149, 164, 0.4);
             align-items: center;
             gap: 8px;
             cursor: pointer;
@@ -205,7 +205,7 @@ export default function Properties() {
       {/* Premium Header */}
       <section style={{ paddingTop: '80px', paddingBottom: '40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
-          <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(37, 99, 235, 0.4)' }}>Property Portfolio</div>
+          <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Property Portfolio</div>
           <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', maxWidth: '800px', lineHeight: 1.1, color: '#fff', marginTop: '16px' }}>Discover Your Next Workspace.</h2>
           <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '600px', marginTop: '24px', fontSize: '18px' }}>
             Explore premium commercial properties across Kolkata's top IT hubs. View detailed amenities, workstation capacities, and high-res galleries.

@@ -18,7 +18,7 @@ export default function HeroSkylineSVG() {
       y1={110 + i * 32}
       x2="480"
       y2={110 + i * 32}
-      stroke="#2563eb"
+      stroke="#1f95a4"
       strokeWidth="0.6"
       opacity="0.6"
     />
@@ -29,13 +29,13 @@ export default function HeroSkylineSVG() {
       <rect x="40" y="120" width="90" height="260" fill="none" stroke="#24423A" strokeWidth="1.4" />
       <rect x="150" y="60" width="110" height="320" fill="none" stroke="#24423A" strokeWidth="1.4" />
       <rect x="280" y="150" width="80" height="230" fill="none" stroke="#24423A" strokeWidth="1.4" />
-      <rect x="380" y="90" width="100" height="290" fill="none" stroke="#2563eb" strokeWidth="1.6" />
+      <rect x="380" y="90" width="100" height="290" fill="none" stroke="#1f95a4" strokeWidth="1.6" />
       {hLines1}
       {hLines2}
       <line x1="20" y1="380" x2="500" y2="380" stroke="#16231F" strokeWidth="1.4" />
-      <line x1="380" y1="400" x2="480" y2="400" stroke="#2563eb" strokeWidth="1" />
-      <line x1="380" y1="396" x2="380" y2="404" stroke="#2563eb" strokeWidth="1" />
-      <line x1="480" y1="396" x2="480" y2="404" stroke="#2563eb" strokeWidth="1" />
+      <line x1="380" y1="400" x2="480" y2="400" stroke="#1f95a4" strokeWidth="1" />
+      <line x1="380" y1="396" x2="380" y2="404" stroke="#1f95a4" strokeWidth="1" />
+      <line x1="480" y1="396" x2="480" y2="404" stroke="#1f95a4" strokeWidth="1" />
     </svg>
   );
 }

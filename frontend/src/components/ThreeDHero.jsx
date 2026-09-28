@@ -27,7 +27,7 @@ function CityGrid() {
       const z = (Math.random() - 0.5) * 12;
       const height = Math.random() * 4 + 1;
       const w = Math.random() * 0.8 + 0.4;
-      const color = Math.random() > 0.85 ? '#2563eb' : '#24423A';
+      const color = Math.random() > 0.85 ? '#1f95a4' : '#24423A';
       temp.push({ position: [x, height / 2 - 0.5, z], scale: [w, height, w], color });
     }
     return temp;
