@@ -9,27 +9,28 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Set up the nodemailer transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // You can change this to your email provider
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 });
 
-app.post('/api/consultation', (req, res) => {
+app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
-  console.log('New consultation request received:', { name, email, phone, interest, message });
   
-  // Send email in background (don't await) so the frontend feels instant
-  transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: process.env.RECEIVER_EMAIL,
-    subject: `New Consultation Request: ${interest}`,
-    text: `
-You have received a new consultation request.
-
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.RECEIVER_EMAIL,
+      subject: `New Consultation Request: ${interest}`,
+      text: `
 Name: ${name}
 Email: ${email}
 Phone: ${phone}
@@ -37,14 +38,16 @@ Interest: ${interest}
 
 Message:
 ${message}
-    `,
-  }).catch(error => {
-    console.error('Error sending email:', error);
-  });
+      `,
+    });
 
-  res.status(200).json({ success: true, message: 'Consultation request received successfully.' });
+    res.status(200).json({ success: true, message: 'Consultation request received successfully.' });
+  } catch (error) {
+    console.error('Render Email Error:', error);
+    res.status(500).json({ success: false, message: 'Failed to send.' });
+  }
 });
 
 app.listen(PORT, () => {
-  console.log(`Backend server is running on http://localhost:${PORT}`);
+  console.log(`Backend server is running on port ${PORT}`);
 });
