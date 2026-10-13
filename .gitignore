@@ -1,4 +1,4 @@
-﻿# ── Dependencies ──────────────────────────────────────────────────────────────
+# ── Dependencies ──────────────────────────────────────────────────────────────
 node_modules/
 .pnp
 .pnp.js
@@ -20,10 +20,8 @@ lerna-debug.log*
 
 # ── Environment / secrets ─────────────────────────────────────────────────────
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 *.local
 
 # ── Vite / tooling cache ──────────────────────────────────────────────────────
