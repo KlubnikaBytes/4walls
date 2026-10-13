@@ -76,11 +76,11 @@ export default function ConsultationModal() {
           >
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Name</label>
-              <input type="text" name="name" required minLength={2} pattern="^[A-Za-z\s\.]+$" title="Only letters and spaces are allowed" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
+              <input type="text" name="name" required minLength={2} pattern="^[A-Za-z\s.]+$" title="Only letters and spaces are allowed" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Email</label>
-              <input type="email" name="email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
+              <input type="email" name="email" required placeholder="Your email address" style={{ width: '100%', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--line)', background: 'var(--white)' }} />
             </div>
             <div>
               <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>Phone</label>

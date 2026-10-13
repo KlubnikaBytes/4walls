@@ -25,8 +25,8 @@ export default function Contact() {
             });
           }}
         >
-          <div className="f"><label>Name</label><input type="text" name="name" className="inp" required minLength={2} pattern="^[A-Za-z\s\.]+$" title="Only letters and spaces are allowed" placeholder="Your name" /></div>
-          <div className="f"><label>Email</label><input type="email" name="email" className="inp" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="Please enter a valid email address" placeholder="Your email address" /></div>
+          <div className="f"><label>Name</label><input type="text" name="name" className="inp" required minLength={2} pattern="^[A-Za-z\s.]+$" title="Only letters and spaces are allowed" placeholder="Your name" /></div>
+          <div className="f"><label>Email</label><input type="email" name="email" className="inp" required placeholder="Your email address" /></div>
           <div className="f"><label>Phone</label><input type="tel" name="phone" className="inp" required pattern="^\+?[0-9]{10,15}$" title="Please enter a valid phone number (10-15 digits)" placeholder="+91" /></div>
           <div className="f">
             <label>Interested in</label>
