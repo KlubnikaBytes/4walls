@@ -10,23 +10,34 @@ app.use(cors());
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
+  service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
   }
+});
+
+// Verify SMTP connection on startup so Render logs show exact status
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('Email transporter verification failed:', error.message);
+  } else {
+    console.log('Email transporter is ready and authenticated successfully');
+  }
+});
+
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: '4Walls backend is running' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date() });
 });
 
 app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
   
   try {
-    // Fire and forget: don't await the email sending so the frontend responds instantly
     transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: process.env.RECEIVER_EMAIL,
@@ -40,7 +51,11 @@ Interest: ${interest}
 Message:
 ${message}
       `,
-    }).catch(error => console.error('Render Email Error:', error));
+    }).then(info => {
+      console.log('Email sent successfully:', info.messageId);
+    }).catch(error => {
+      console.error('Render Email Send Error:', error);
+    });
 
     res.status(200).json({ success: true, message: 'Consultation request received successfully.' });
   } catch (error) {
