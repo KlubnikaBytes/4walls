@@ -2,11 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-
-const dns = require('dns');
-if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder('ipv4first');
-}
+const { Resend } = require('resend');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,6 +10,10 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Initialize Resend if RESEND_API_KEY is set (recommended for Render Free tier over HTTPS Port 443)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+// Initialize Nodemailer as fallback (for local development or paid cloud instances)
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
@@ -24,74 +24,93 @@ const transporter = nodemailer.createTransport({
   },
   tls: {
     rejectUnauthorized: false
-  },
-  lookup: (hostname, options, callback) => {
-    dns.lookup(hostname, { family: 4 }, callback);
   }
 });
 
-// Verify SMTP connection on startup so Render logs show exact status
-transporter.verify((error, success) => {
-  if (error) {
-    console.error('Email transporter verification failed:', error.message);
+// Unified email dispatch function
+async function sendEmail({ to, replyTo, subject, text }) {
+  if (resend) {
+    console.log('Sending email via Resend API (HTTPS)...');
+    const { data, error } = await resend.emails.send({
+      from: '4Walls <onboarding@resend.dev>',
+      to: [to],
+      reply_to: replyTo,
+      subject: subject,
+      text: text
+    });
+    if (error) {
+      throw new Error(`Resend Error: ${error.message}`);
+    }
+    return { provider: 'resend', id: data?.id };
   } else {
-    console.log('Email transporter is ready and authenticated successfully');
+    console.log('Sending email via Nodemailer SMTP...');
+    const info = await transporter.sendMail({
+      from: `"4Walls Inquiries" <${process.env.EMAIL_USER}>`,
+      to: to,
+      replyTo: replyTo,
+      subject: subject,
+      text: text
+    });
+    return { provider: 'nodemailer', id: info.messageId };
   }
-});
+}
 
 app.get('/', (req, res) => {
-  res.json({ status: 'ok', message: '4Walls backend is running' });
+  res.json({
+    status: 'ok',
+    message: '4Walls backend is running',
+    emailDriver: resend ? 'Resend (HTTPS Port 443)' : 'Nodemailer (SMTP Port 465)'
+  });
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date() });
-});
-
-app.get('/api/test-email', async (req, res) => {
-  try {
-    const info = await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
-      subject: 'Diagnostic Test from 4Walls Backend',
-      text: `Diagnostic test sent at ${new Date().toISOString()}.\nFrom: ${process.env.EMAIL_USER}\nTo: ${process.env.RECEIVER_EMAIL}`
-    });
-    res.json({ success: true, messageId: info.messageId, response: info.response, to: process.env.RECEIVER_EMAIL });
-  } catch (error) {
-    console.error('Diagnostic Email Error:', error);
-    res.status(500).json({ success: false, error: error.message });
-  }
+  res.json({
+    status: 'ok',
+    timestamp: new Date(),
+    emailDriver: resend ? 'Resend' : 'Nodemailer'
+  });
 });
 
 app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
-  
-  try {
-    const info = await transporter.sendMail({
-      from: `"4Walls Inquiries" <${process.env.EMAIL_USER}>`,
-      to: process.env.RECEIVER_EMAIL,
-      replyTo: email,
-      subject: `New Consultation Request: ${interest || 'General Inquiry'}`,
-      text: `
-New Lead Received from 4Walls Website:
-----------------------------------------
-Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Interest: ${interest}
+  const receiverEmail = process.env.RECEIVER_EMAIL || 'agnik.m03@gmail.com';
+
+  const emailText = `
+New Consultation Lead Received from 4Walls Website:
+---------------------------------------------------
+Name: ${name || 'N/A'}
+Email: ${email || 'N/A'}
+Phone: ${phone || 'N/A'}
+Interest: ${interest || 'General Inquiry'}
 
 Message:
-${message}
-      `,
+${message || 'N/A'}
+  `;
+
+  try {
+    const result = await sendEmail({
+      to: receiverEmail,
+      replyTo: email,
+      subject: `New Consultation Request: ${interest || 'General Inquiry'}`,
+      text: emailText
     });
 
-    console.log('Consultation email sent successfully:', info.messageId);
-    res.status(200).json({ success: true, message: 'Consultation request received successfully.', messageId: info.messageId });
+    console.log('Consultation email sent successfully:', result);
+    res.status(200).json({
+      success: true,
+      message: 'Consultation request received successfully.',
+      result
+    });
   } catch (error) {
     console.error('Server Consultation Error:', error);
-    res.status(500).json({ success: false, message: error.message || 'Failed to send.' });
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to send email.'
+    });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`Backend server is running on port ${PORT}`);
+  console.log(`Email driver: ${resend ? 'Resend (HTTPS Port 443)' : 'Nodemailer (SMTP Port 465)'}`);
 });
