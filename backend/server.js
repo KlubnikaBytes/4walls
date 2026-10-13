@@ -3,6 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -20,10 +25,9 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false
   },
-  family: 4, // Force IPv4 to prevent cloud IPv6 hangs
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 15000
+  lookup: (hostname, options, callback) => {
+    dns.lookup(hostname, { family: 4 }, callback);
+  }
 });
 
 // Verify SMTP connection on startup so Render logs show exact status
