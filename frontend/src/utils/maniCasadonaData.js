@@ -1,7 +1,7 @@
 export const maniCasadonaOptions = [
   {
     id: 1,
-    name: "3rd Floor Office",
+    name: "Office Space",
     folder: "3rd floor office",
     size: "1052 sq.ft",
     workstation: 16,
@@ -15,7 +15,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 2,
-    name: "3rd Floor",
+    name: "Office Space",
     folder: "3rd floor",
     size: "900 sq.ft",
     workstation: 10,
@@ -29,7 +29,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 3,
-    name: "4th Floor Office",
+    name: "Office Space",
     folder: "4th floor office",
     size: "1127 sq.ft",
     workstation: 18,
@@ -43,7 +43,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 4,
-    name: "6th Floor N",
+    name: "Office Space",
     folder: "6th floor n",
     size: "623 sq.ft",
     workstation: 8,
@@ -57,7 +57,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 5,
-    name: "6th Mani",
+    name: "Office Space",
     folder: "6th Mani",
     size: "807 sq.ft",
     workstation: 13,
@@ -71,7 +71,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 6,
-    name: "7th Floor Office",
+    name: "Office Space",
     folder: "7th floor office",
     size: "525 sq.ft",
     workstation: 10,
@@ -85,7 +85,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 7,
-    name: "11th Floor Office",
+    name: "Office Space",
     folder: "11th floor office",
     size: "1550 sq.ft",
     workstation: 30,
@@ -99,7 +99,7 @@ export const maniCasadonaOptions = [
   },
   {
     id: 8,
-    name: "Premium Option 8",
+    name: "Office Space",
     folder: "Option 8",
     size: "4700 sq.ft",
     workstation: 100,

@@ -1,7 +1,7 @@
 export const ecospaceOptions = [
   {
     id: 1,
-    name: "Unit 1",
+    name: "Office Space",
     folder: "Option 1",
     size: "1850 sq.ft",
     workstation: 20,
@@ -15,7 +15,7 @@ export const ecospaceOptions = [
   },
   {
     id: 2,
-    name: "Unit 2",
+    name: "Office Space",
     folder: "Option 2",
     size: "970 sq.ft",
     workstation: 22,
@@ -29,7 +29,7 @@ export const ecospaceOptions = [
   },
   {
     id: 3,
-    name: "Unit 3",
+    name: "Office Space",
     folder: "Option 3",
     size: "600 sq.ft",
     workstation: 9,
@@ -43,7 +43,7 @@ export const ecospaceOptions = [
   },
   {
     id: 4,
-    name: "Unit 4",
+    name: "Office Space",
     folder: "Option 4",
     size: "938 sq.ft",
     workstation: 20,

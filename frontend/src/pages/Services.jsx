@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 export default function Services() {
   return (
     <>
@@ -7,12 +9,12 @@ export default function Services() {
       </section>
       <section style={{ paddingTop: 0 }}>
         <div className="service-list">
-          <div className="service-item"><span className="idx">01</span><h3>Office Leasing</h3><p>Search, shortlist, negotiate — we handle the full leasing cycle for tenants of any size.</p></div>
-          <div className="service-item"><span className="idx">02</span><h3>Office Buying &amp; Investment</h3><p>Purchase advisory, rental-yield properties and pre-leased assets for investors.</p></div>
-          <div className="service-item"><span className="idx">03</span><h3>Interior &amp; Workspace Design</h3><p>Complete fit-outs — design, furniture, execution and handover.</p></div>
-          <div className="service-item"><span className="idx">04</span><h3>Property Management</h3><p>Rent collection, tenant relations, maintenance and documentation.</p></div>
-          <div className="service-item"><span className="idx">05</span><h3>Portfolio Advisory</h3><p>Consolidated reporting and strategy for owners of multiple commercial assets.</p></div>
-          <div className="service-item"><span className="idx">—</span><h3>Talk to an advisor</h3><p style={{ color: 'var(--brass)', borderBottom: '1px solid var(--brass)', display: 'inline-block' }}>Schedule a call →</p></div>
+          <Link to="/properties" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">01</span><h3>Office Leasing</h3><p>Search, shortlist, negotiate — we handle the full leasing cycle for tenants of any size.</p></Link>
+          <Link to="/investment" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">02</span><h3>Office Buying &amp; Investment</h3><p>Purchase advisory, rental-yield properties and pre-leased assets for investors.</p></Link>
+          <Link to="/interior" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">03</span><h3>Interior &amp; Workspace Design</h3><p>Complete fit-outs — design, furniture, execution and handover.</p></Link>
+          <Link to="/manage-space" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">04</span><h3>Property Management</h3><p>Rent collection, tenant relations, maintenance and documentation.</p></Link>
+          <Link to="/investment" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">05</span><h3>Portfolio Advisory</h3><p>Consolidated reporting and strategy for owners of multiple commercial assets.</p></Link>
+          <Link to="/contact" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}><span className="idx">—</span><h3>Talk to an advisor</h3><p style={{ color: 'var(--brass)', borderBottom: '1px solid var(--brass)', display: 'inline-block' }}>Schedule a call →</p></Link>
         </div>
       </section>
       <section>

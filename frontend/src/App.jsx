@@ -13,6 +13,8 @@ import About from './pages/About';
 import Careers from './pages/Careers';
 import Contact from './pages/Contact';
 import ManageSpace from './pages/ManageSpace';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfUse from './pages/TermsOfUse';
 import './index.css';
 
 function ScrollToTop() {
@@ -41,6 +43,8 @@ function App() {
           <Route path="mani-casadona" element={<ManiCasadona />} />
           <Route path="ecospace" element={<Ecospace />} />
           <Route path="manage-space" element={<ManageSpace />} />
+          <Route path="privacy" element={<PrivacyPolicy />} />
+          <Route path="terms" element={<TermsOfUse />} />
         </Route>
       </Routes>
     </BrowserRouter>

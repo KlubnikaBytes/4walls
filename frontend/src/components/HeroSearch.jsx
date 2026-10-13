@@ -85,6 +85,8 @@ export default function HeroSearch() {
     setIsFocused(true);
   };
 
+  return null;
+  /*
   return (
     <div style={{ background: 'var(--white)', borderBottom: '1px solid var(--line)', position: 'relative', zIndex: 50 }}>
       <div 
@@ -189,7 +191,6 @@ export default function HeroSearch() {
           Search
         </button>
 
-        {/* Results Dropdown Container */}
         {isFocused && (
           <div style={{
             position: 'absolute',
@@ -255,4 +256,5 @@ export default function HeroSearch() {
       </div>
     </div>
   );
+  */
 }

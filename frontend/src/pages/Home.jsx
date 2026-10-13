@@ -32,8 +32,56 @@ const slides = [
   }
 ];
 
+function AnimatedNumber({ value, duration = 2000 }) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const domRef = React.useRef();
+  
+  const numStr = String(value);
+  const numMatch = numStr.match(/[\d\.]+/);
+  const targetNum = numMatch ? parseFloat(numMatch[0]) : 0;
+  const isFloat = numStr.includes('.');
+  const prefix = numStr.split(numMatch[0])[0] || '';
+  const suffix = numStr.split(numMatch[0])[1] || '';
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && !hasAnimated) {
+        setHasAnimated(true);
+      }
+    });
+    if (domRef.current) observer.observe(domRef.current);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  useEffect(() => {
+    if (!hasAnimated) return;
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const easeProgress = progress * (2 - progress); // ease out quad
+      setCount(easeProgress * targetNum);
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      } else {
+        setCount(targetNum);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [hasAnimated, targetNum, duration]);
+
+  const displayCount = isFloat ? count.toFixed(1) : Math.floor(count);
+
+  return (
+    <span ref={domRef}>
+      {prefix}{displayCount}{suffix}
+    </span>
+  );
+}
+
 export default function Home() {
-  const latestInterior = getProperties(4, 2); 
+  const latestInterior = getProperties(4, 2);
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigate = useNavigate();
 
@@ -52,13 +100,13 @@ export default function Home() {
       <HeroSearch />
 
       {/* Slider Hero */}
-      <div 
+      <div
         className="hero-slider"
         style={{
           position: 'relative',
           width: '100%',
-          height: '80vh',
-          minHeight: '600px',
+          height: 'clamp(400px, 70vh, 90vh)',
+          minHeight: '400px',
           overflow: 'hidden',
           cursor: 'pointer'
         }}
@@ -89,24 +137,26 @@ export default function Home() {
           </div>
         ))}
 
-        <div style={{
+        <div className="hero-slider-content" style={{
           position: 'absolute',
           top: '50%',
-          left: '48px',
+          left: '0',
+          right: '0',
+          padding: '0 clamp(20px, 5vw, 48px)',
           transform: 'translateY(-50%)',
           zIndex: 10,
           color: 'var(--white)',
-          maxWidth: '600px',
-          pointerEvents: 'none' // Let clicks pass through to the slider wrapper
+          maxWidth: '700px',
+          pointerEvents: 'none'
         }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255, 0.1)', border: '1px solid rgba(255,255,255,0.3)', padding: '6px 16px', borderRadius: '40px', fontSize: '11px', fontWeight: 600, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '24px' }}>
             <span style={{ display: 'inline-block', width: '8px', height: '8px', background: 'var(--brass)', borderRadius: '50%' }}></span>
             Kolkata's Only End-to-End Commercial Partner
           </div>
-          <h1 style={{ fontSize: '64px', fontWeight: 600, lineHeight: 1.1, marginBottom: '20px', transition: 'all 0.5s', transform: 'translateY(0)' }}>
+          <h1 style={{ fontSize: 'clamp(32px, 7vw, 64px)', fontWeight: 600, lineHeight: 1.1, marginBottom: '20px', transition: 'all 0.5s', transform: 'translateY(0)' }}>
             {activeSlide.title}
           </h1>
-          <p style={{ fontSize: '18px', color: '#cfd8d0', lineHeight: 1.6, marginBottom: '40px' }}>
+          <p style={{ fontSize: 'clamp(14px, 2.5vw, 18px)', color: '#cfd8d0', lineHeight: 1.6, marginBottom: '40px' }}>
             {activeSlide.subtitle}
           </p>
           <div className="btn-brass" style={{ display: 'inline-block', padding: '16px 32px', fontSize: '13px' }}>
@@ -115,7 +165,7 @@ export default function Home() {
         </div>
 
         {/* Slider Navigation Dots */}
-        <div style={{ position: 'absolute', bottom: '40px', left: '48px', display: 'flex', gap: '12px', zIndex: 10 }}>
+        <div style={{ position: 'absolute', bottom: '28px', left: 'clamp(20px, 5vw, 48px)', display: 'flex', gap: '12px', zIndex: 10 }}>
           {slides.map((_, index) => (
             <button
               key={index}
@@ -141,18 +191,23 @@ export default function Home() {
       {/* Featured Spaces (Mani & Ecospace only) */}
       <section style={{ background: 'var(--white)' }} className="py-large">
         <div className="section-head" style={{ marginBottom: '48px' }}>
-          <h2 style={{ fontSize: '36px' }}>Office Space</h2>
+          <h2 style={{ fontSize: 'clamp(24px, 4vw, 36px)' }}>Office Space</h2>
           <p style={{ fontSize: '15px' }}>Premium commercial properties and IT hubs.</p>
         </div>
-        <div className="card-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-          
+        <div className="home-office-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+
           <Link to="/mani-casadona" className="card hover-card" style={{ textDecoration: 'none', color: 'inherit', border: 'none', background: 'var(--paper)', borderRadius: '12px', overflow: 'hidden' }}>
-            <div className="thumb" style={{ height: '320px', backgroundImage: 'url("/mani.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="thumb" style={{ height: '320px', backgroundImage: 'url("/mani.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />
+              <div style={{ position: 'absolute', bottom: 16, left: 16, display: 'flex', gap: 6 }}>
+                <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>IT Park</span>
+                <span style={{ background: 'var(--brass)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Commercial</span>
+              </div>
             </div>
             <div className="body" style={{ padding: '32px' }}>
               <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Mani Casadona</h3>
               <p style={{ color: 'var(--ink-soft)', lineHeight: 1.6, fontSize: '15px' }}>New Town's premier IT and commercial hub.</p>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Available Space</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>1,500 - 12,000 sq.ft</div></div>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Ready-to-Move</div></div>
@@ -165,12 +220,17 @@ export default function Home() {
           </Link>
 
           <Link to="/ecospace" className="card hover-card" style={{ textDecoration: 'none', color: 'inherit', border: 'none', background: 'var(--paper)', borderRadius: '12px', overflow: 'hidden' }}>
-            <div className="thumb" style={{ height: '320px', backgroundImage: 'url("/ecospace.jpg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+            <div className="thumb" style={{ height: '320px', backgroundImage: 'url("/ecospace.jpg")', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)' }} />
+              <div style={{ position: 'absolute', bottom: 16, left: 16, display: 'flex', gap: 6 }}>
+                <span style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Business Park</span>
+                <span style={{ background: '#2e7d32', color: '#fff', fontFamily: 'IBM Plex Mono', fontSize: 10, padding: '4px 10px', borderRadius: 20, letterSpacing: '.06em' }}>Green Building</span>
+              </div>
             </div>
             <div className="body" style={{ padding: '32px' }}>
               <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Ecospace Business Park</h3>
               <p style={{ color: 'var(--ink-soft)', lineHeight: 1.6, fontSize: '15px' }}>A highly sought-after green business park in New Town.</p>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Available Space</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>2,500 - 25,000 sq.ft</div></div>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Unfurnished, Fully furnished, Ready-to-Move</div></div>
@@ -193,7 +253,7 @@ export default function Home() {
             <div className="body" style={{ padding: '32px' }}>
               <h3 style={{ fontSize: '24px', marginBottom: '12px' }}>Managed Space</h3>
               <p style={{ color: 'var(--ink-soft)', lineHeight: 1.6, fontSize: '15px' }}>Flexible co-working desks & fully managed private office suites — move-in ready across Kolkata.</p>
-              
+
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', margin: '20px 0', padding: '16px 0', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Space Types</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Co-Work & Private</div></div>
                 <div><div style={{ fontFamily: 'IBM Plex Mono', fontSize: '9px', textTransform: 'uppercase', color: 'var(--ink-soft)', letterSpacing: '0.08em', marginBottom: '6px' }}>Status</div><div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--ink)' }}>Ready to Move</div></div>
@@ -213,7 +273,7 @@ export default function Home() {
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '40px' }}>
           <div className="futuristic-box" style={{ flex: '1 1 400px' }}>
             <div className="eyebrow" style={{ color: 'var(--brass)' }}>Future Workspaces</div>
-            <h2 style={{ fontSize: 'clamp(32px, 8vw, 48px)', lineHeight: 1.1, marginBottom: '20px' }}>Interior Designing,<br/>Reimagined.</h2>
+            <h2 style={{ fontSize: 'clamp(32px, 8vw, 48px)', lineHeight: 1.1, marginBottom: '20px' }}>Interior Designing,<br />Reimagined.</h2>
             <p style={{ color: '#a0aab2', fontSize: '16px', maxWidth: '400px', lineHeight: 1.6, marginBottom: '32px' }}>
               We build intelligent, beautiful, and futuristic workspaces. From bare shell to move-in ready with zero friction and ultimate precision.
             </p>
@@ -234,24 +294,22 @@ export default function Home() {
           <h2>Our services</h2>
           <p>Everything an office needs, from first search to ongoing management.</p>
         </div>
-        <div className="service-list" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-          <div className="service-item"><span className="idx">01</span><h3>Office Leasing</h3><p>Find and negotiate the right space, fast.</p></div>
-          <div className="service-item"><span className="idx">02</span><h3>Office Buying &amp; Investment</h3><p>Purchase advisory and rental-income properties.</p></div>
-          <div className="service-item"><span className="idx">03</span><h3>Interior &amp; Workspace Design</h3><p>Fit-outs, furniture, and complete design delivery.</p></div>
-          <div className="service-item"><span className="idx">04</span><h3>Property Management</h3><p>Rent collection, tenants, maintenance, paperwork.</p></div>
-          <div className="service-item" style={{ gridColumn: 'span 2', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div><span className="idx">05</span><h3>Portfolio Advisory</h3><p>For owners managing multiple commercial assets.</p></div>
-            <Link to="/services" className="mono" style={{ fontSize: '11px', color: 'var(--brass)', borderBottom: '1px solid var(--brass)', textDecoration: 'none' }}>View all services →</Link>
-          </div>
+        <div className="service-list">
+          <Link to="/properties" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">01</span><h3>Office Leasing</h3><p>Search, shortlist, negotiate — we handle the full leasing cycle for tenants of any size.</p></Link>
+          <Link to="/investment" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">02</span><h3>Office Buying &amp; Investment</h3><p>Purchase advisory, rental-yield properties and pre-leased assets for investors.</p></Link>
+          <Link to="/interior" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">03</span><h3>Interior &amp; Workspace Design</h3><p>Complete fit-outs — design, furniture, execution and handover.</p></Link>
+          <Link to="/manage-space" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">04</span><h3>Property Management</h3><p>Rent collection, tenant relations, maintenance and documentation.</p></Link>
+          <Link to="/investment" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">05</span><h3>Portfolio Advisory</h3><p>Consolidated reporting and strategy for owners of multiple commercial assets.</p></Link>
+          <Link to="/services" className="service-item" style={{ textDecoration: 'none', color: 'inherit', display: 'block', transition: 'background 0.2s ease' }} onMouseEnter={e => e.currentTarget.style.background = 'var(--paper-2)'} onMouseLeave={e => e.currentTarget.style.background = 'var(--paper)'}><span className="idx">—</span><h3>View all services</h3><p style={{ color: 'var(--brass)', borderBottom: '1px solid var(--brass)', display: 'inline-block' }}>See details →</p></Link>
         </div>
       </section>
 
       {/* Stats (Correct Original Style) */}
       <div className="stat-band">
-        <div><div className="num">12+</div><div className="lbl">Years Experience</div></div>
-        <div><div className="num">640</div><div class="lbl">Transactions Closed</div></div>
-        <div><div className="num">3.8M</div><div class="lbl">Sq.Ft Delivered</div></div>
-        <div><div className="num">210+</div><div class="lbl">Companies Served</div></div>
+        <div><div className="num"><AnimatedNumber value="12+" /></div><div className="lbl">Years Experience</div></div>
+        <div><div className="num"><AnimatedNumber value="640" /></div><div className="lbl">Transactions Closed</div></div>
+        <div><div className="num"><AnimatedNumber value="3.8M" /></div><div className="lbl">Sq.Ft Delivered</div></div>
+        <div><div className="num"><AnimatedNumber value="210+" /></div><div className="lbl">Companies Served</div></div>
       </div>
 
       {/* Interior Projects (New Graphical Style) */}
@@ -262,10 +320,10 @@ export default function Home() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px' }}>
           {interiorAssets.filter(a => a.type === 'image').slice(0, 8).map((asset, i) => (
-            <div key={i} style={{ 
-              borderRadius: '12px', 
-              overflow: 'hidden', 
-              aspectRatio: '4/3', 
+            <div key={i} style={{
+              borderRadius: '12px',
+              overflow: 'hidden',
+              aspectRatio: '4/3',
               backgroundImage: `url('${asset.path}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -279,8 +337,8 @@ export default function Home() {
         </div>
       </section>
 
-      
-      
+
+
 
 
       {/* Testimonials (Correct Original Style) */}
@@ -314,38 +372,89 @@ export default function Home() {
       {/* CTA */}
       <div className="cta-strip">
         <h3>Ready to find your next office space?</h3>
-        <p style={{ color: "var(--ink)", marginBottom: "20px", fontSize: "18px" }}>Call us at <strong>+91 90518 06000</strong> or book a site visit.</p>
+        <p style={{ color: "var(--ink)", marginBottom: "20px", fontSize: "clamp(15px, 2.5vw, 18px)" }}>Call us at <strong><a href="tel:+919051806000" style={{ color: 'inherit', textDecoration: 'none' }}>+91 90518 06000</a></strong> or book a site visit.</p>
         <Link to="/contact" className="btn-brass" style={{ textDecoration: 'none' }}>Book a Site Visit →</Link>
       </div>
-      {/* FAB Book Consultation */}
-      
-      <button 
-        onClick={() => window.dispatchEvent(new Event('open-consultation'))}
-        style={{ 
-          position: 'fixed', 
-          bottom: '30px', 
-          right: '30px', 
-          background: 'var(--brass)', 
-          color: 'var(--ink)', 
-          padding: '16px', 
-          borderRadius: '50%', 
-          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000,
-          border: 'none',
-          cursor: 'pointer',
-          transition: 'transform 0.3s'
-        }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-        title="Book a Consultation"
-      >
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-        </svg>
-      </button>
+      {/* Floating Action Buttons */}
+      <div style={{ position: 'fixed', bottom: '24px', right: '20px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
+        <style>{`
+          .fab-icon-btn {
+            display: flex;
+            align-items: center;
+            flex-direction: row-reverse;
+            justify-content: flex-start;
+            gap: 12px;
+            color: #fff;
+            padding: 12px;
+            border-radius: 40px;
+            text-decoration: none;
+            overflow: hidden;
+            max-width: 48px;
+            height: 48px;
+            box-sizing: border-box;
+            white-space: nowrap;
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          }
+          .fab-icon-btn.whatsapp {
+            background: #25D366;
+          }
+          .fab-icon-btn.call {
+            background: #007AFF;
+          }
+          .fab-icon-btn:hover {
+            max-width: 200px;
+            transform: scale(1.05);
+          }
+          .fab-icon-btn span {
+            font-size: 15px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+          }
+          .fab-icon-btn:hover span {
+            opacity: 1;
+            transition-delay: 0.15s;
+          }
+          .fab-icon-btn svg {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            display: block;
+          }
+        `}</style>
+        <a href="tel:+919051806000" className="fab-icon-btn call" title="Call Us">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          <span>Call Us</span>
+        </a>
+        <a href="https://wa.me/919051806000" target="_blank" rel="noopener noreferrer" className="fab-icon-btn whatsapp" title="WhatsApp Us">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+          <span>WhatsApp Us</span>
+        </a>
+        <button
+          onClick={() => window.dispatchEvent(new Event('open-consultation'))}
+          style={{
+            background: 'var(--brass)',
+            color: 'var(--ink)',
+            padding: '16px',
+            borderRadius: '50%',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'transform 0.3s'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          title="Book a Consultation"
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
+      </div>
 
     </>
   );
