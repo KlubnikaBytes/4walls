@@ -12,15 +12,19 @@ export default function Contact() {
             e.preventDefault();
             const formData = new FormData(e.target);
             const data = Object.fromEntries(formData);
-            const baseUrl = import.meta.env.VITE_BACKEND_URL || '';
+            const baseUrl = import.meta.env.VITE_BACKEND_URL || 'https://fourwalls-1.onrender.com';
             fetch(baseUrl + '/api/consultation', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(data)
-            }).then(res => res.json()).then(res => {
+            }).then(res => {
+              if (!res.ok) throw new Error("Server error");
+              return res.json();
+            }).then(res => {
               alert("Thank you! We will contact you soon.");
               e.target.reset();
             }).catch(err => {
+              console.error(err);
               alert("Error submitting form. Please try again.");
             });
           }}
