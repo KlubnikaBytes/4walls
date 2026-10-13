@@ -53,11 +53,14 @@ app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
   
   try {
-    transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const info = await transporter.sendMail({
+      from: `"4Walls Inquiries" <${process.env.EMAIL_USER}>`,
       to: process.env.RECEIVER_EMAIL,
-      subject: `New Consultation Request: ${interest}`,
+      replyTo: email,
+      subject: `New Consultation Request: ${interest || 'General Inquiry'}`,
       text: `
+New Lead Received from 4Walls Website:
+----------------------------------------
 Name: ${name}
 Email: ${email}
 Phone: ${phone}
@@ -66,16 +69,13 @@ Interest: ${interest}
 Message:
 ${message}
       `,
-    }).then(info => {
-      console.log('Email sent successfully:', info.messageId);
-    }).catch(error => {
-      console.error('Render Email Send Error:', error);
     });
 
-    res.status(200).json({ success: true, message: 'Consultation request received successfully.' });
+    console.log('Consultation email sent successfully:', info.messageId);
+    res.status(200).json({ success: true, message: 'Consultation request received successfully.', messageId: info.messageId });
   } catch (error) {
-    console.error('Server Error:', error);
-    res.status(500).json({ success: false, message: 'Failed to send.' });
+    console.error('Server Consultation Error:', error);
+    res.status(500).json({ success: false, message: error.message || 'Failed to send.' });
   }
 });
 
