@@ -34,6 +34,21 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const info = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.RECEIVER_EMAIL,
+      subject: 'Diagnostic Test from 4Walls Backend',
+      text: `Diagnostic test sent at ${new Date().toISOString()}.\nFrom: ${process.env.EMAIL_USER}\nTo: ${process.env.RECEIVER_EMAIL}`
+    });
+    res.json({ success: true, messageId: info.messageId, response: info.response, to: process.env.RECEIVER_EMAIL });
+  } catch (error) {
+    console.error('Diagnostic Email Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 app.post('/api/consultation', async (req, res) => {
   const { name, email, phone, interest, message } = req.body;
   
