@@ -306,10 +306,9 @@ export default function Home() {
 
       {/* Stats (Correct Original Style) */}
       <div className="stat-band">
-        <div><div className="num"><AnimatedNumber value="12+" /></div><div className="lbl">Years Experience</div></div>
-        <div><div className="num"><AnimatedNumber value="640" /></div><div className="lbl">Transactions Closed</div></div>
-        <div><div className="num"><AnimatedNumber value="3.8M" /></div><div className="lbl">Sq.Ft Delivered</div></div>
-        <div><div className="num"><AnimatedNumber value="210+" /></div><div className="lbl">Companies Served</div></div>
+        <div><div className="num"><AnimatedNumber value="900+" /></div><div className="lbl">Deals Closed</div></div>
+        <div><div className="num"><AnimatedNumber value="1.2M+" /></div><div className="lbl">Sq.Ft Delivered</div></div>
+        <div><div className="num"><AnimatedNumber value="30+" /></div><div className="lbl">Years of Collective Experience</div></div>
       </div>
 
       {/* Interior Projects (New Graphical Style) */}

@@ -476,8 +476,8 @@ section {
   color: var(--white);
   padding: 52px 48px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
   text-align: center;
 }
 
@@ -982,7 +982,7 @@ section {
   }
 
   .stat-band {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
   .footer-grid {
@@ -1070,7 +1070,8 @@ section {
   }
 
   .stat-band {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+    gap: 28px;
     padding: 36px 20px;
   }
 
