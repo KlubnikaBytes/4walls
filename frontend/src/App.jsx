@@ -15,6 +15,7 @@ import Contact from './pages/Contact';
 import ManageSpace from './pages/ManageSpace';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
+import Admin from './pages/Admin';
 import './index.css';
 
 function ScrollToTop() {
@@ -46,6 +47,7 @@ function App() {
           <Route path="privacy" element={<PrivacyPolicy />} />
           <Route path="terms" element={<TermsOfUse />} />
         </Route>
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );

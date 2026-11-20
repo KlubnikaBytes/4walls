@@ -1,9 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { maniCasadonaOptions } from '../utils/maniCasadonaData';
+import { fetchBuildingPropertiesApi, resolveMediaUrl } from '../utils/api';
+import { useWebSocket } from '../utils/useWebSocket';
 
 export default function ManiCasadona() {
+  const [options, setOptions] = useState(maniCasadonaOptions);
   const [selectedOpt, setSelectedOpt] = useState(null);
   const [zoomedIndex, setZoomedIndex] = useState(null);
+
+  // Fetch latest properties from backend
+  const loadProperties = useCallback(async () => {
+    try {
+      const res = await fetchBuildingPropertiesApi('Mani Casadona');
+      if (res.items && res.items.length > 0) {
+        setOptions(res.items);
+      }
+    } catch (err) {
+      // Fallback to static data
+      console.log('Using static Mani Casadona data fallback');
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  // WebSocket listener for live updates
+  const handleWs = useCallback((msg) => {
+    if (msg.type === 'PROPERTIES_UPDATED') {
+      const items = msg.payload?.properties?.['Mani Casadona'];
+      if (items) {
+        setOptions(items);
+      }
+    }
+  }, []);
+
+  useWebSocket(handleWs);
+
+  const getImgSrc = (folder, img) => {
+    if (!img) return '/hero.png';
+    if (img.startsWith('/') || img.startsWith('http')) return resolveMediaUrl(img);
+    return `/manicasadona/${folder}/${img}`;
+  };
 
   const handleNextZoom = (e) => {
     e.stopPropagation();
@@ -27,27 +65,29 @@ export default function ManiCasadona() {
       </div>
 
       <div className="mc-grid">
-        {maniCasadonaOptions.map((opt) => (
-          <div 
-            className="mc-card hover-card" 
-            key={opt.id}
-            onClick={() => setSelectedOpt(opt)}
-          >
-            <div className="mc-card-thumb">
-              {/* Show the first image as the thumbnail */}
-              <img src={`/manicasadona/${opt.folder}/${opt.images[0]}`} alt={opt.name} />
-              <div className="mc-card-tag">{opt.size}</div>
-            </div>
-            <div className="mc-card-body">
-              <h3 className="opt-title">{opt.name}</h3>
-              <p className="opt-price">{opt.rent} / month</p>
-              <div className="opt-quick-meta">
-                <span>{opt.workstation} Workstations</span> • <span>{opt.cabin} Cabins</span>
+        {options.map((opt) => {
+          const firstImg = opt.images?.[0] || '1.jpg';
+          return (
+            <div 
+              className="mc-card hover-card" 
+              key={opt.id}
+              onClick={() => setSelectedOpt(opt)}
+            >
+              <div className="mc-card-thumb">
+                <img src={getImgSrc(opt.folder, firstImg)} alt={opt.name} onError={(e) => { e.target.src = '/hero.png'; }} />
+                <div className="mc-card-tag">{opt.size}</div>
               </div>
-              <button className="mc-btn-view">View Details</button>
+              <div className="mc-card-body">
+                <h3 className="opt-title">{opt.name}</h3>
+                <p className="opt-price">{opt.rent} / month</p>
+                <div className="opt-quick-meta">
+                  <span>{opt.workstation} Workstations</span> • <span>{opt.cabin} Cabins</span>
+                </div>
+                <button className="mc-btn-view">View Details</button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Property Details Modal */}
@@ -93,14 +133,15 @@ export default function ManiCasadona() {
                 </div>
               </div>
 
-              <h4 className="mc-gallery-title">Property Gallery</h4>
+              <h4 className="mc-gallery-title">Property Gallery ({selectedOpt.images?.length || 0})</h4>
               <div className="mc-gallery">
-                {selectedOpt.images.map((img, idx) => (
+                {(selectedOpt.images || []).map((img, idx) => (
                   <img 
                     key={idx} 
-                    src={`/manicasadona/${selectedOpt.folder}/${img}`} 
+                    src={getImgSrc(selectedOpt.folder, img)} 
                     alt={`${selectedOpt.name} - ${idx}`}
                     onClick={() => setZoomedIndex(idx)}
+                    onError={(e) => { e.target.src = '/hero.png'; }}
                   />
                 ))}
               </div>
@@ -117,9 +158,10 @@ export default function ManiCasadona() {
           <button className="mc-lightbox-nav prev" onClick={handlePrevZoom}>‹</button>
           
           <img 
-            src={`/manicasadona/${selectedOpt.folder}/${selectedOpt.images[zoomedIndex]}`} 
+            src={getImgSrc(selectedOpt.folder, selectedOpt.images[zoomedIndex])} 
             alt="Zoomed view" 
             onClick={(e) => e.stopPropagation()} 
+            onError={(e) => { e.target.src = '/hero.png'; }}
           />
           
           <button className="mc-lightbox-nav next" onClick={handleNextZoom}>›</button>

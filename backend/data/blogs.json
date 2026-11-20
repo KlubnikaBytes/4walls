@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "cat": "Leasing",
+    "title": "How to lease your first commercial office in Kolkata",
+    "img": "/uploads/8-1794995156523-134385.jpg",
+    "excerpt": "Essential checklist on lock-in periods, CAM charges, stamp duty, and location strategy in Kolkata commercial hubs.",
+    "content": "TEST",
+    "date": "2026-10-15",
+    "readTime": "5 min read",
+    "author": "Nitin Baheti"
+  },
+  {
+    "id": 2,
+    "cat": "Legal",
+    "title": "GST on commercial property, explained simply",
+    "img": "/uploads/9-1794990510120-935454.jpg",
+    "excerpt": "Comprehensive overview of reverse charge, forward charge, and Input Tax Credit (ITC) for business tenants.",
+    "content": "TEST",
+    "date": "2026-10-10",
+    "readTime": "4 min read",
+    "author": "Legal Team"
+  },
+  {
+    "id": 3,
+    "cat": "Legal",
+    "title": "The ultimate commercial rental agreement guide",
+    "img": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&h=400&q=80",
+    "excerpt": "Key clauses every tenant and landlord should include in a commercial lease contract to prevent disputes.",
+    "content": "From annual rental escalation clauses (typically 5% every year or 15% every 3 years) to force majeure, security deposit refund terms, and rent-free fit-out periods, a solid commercial agreement protects both parties against unexpected operational liabilities.",
+    "date": "2026-10-05",
+    "readTime": "6 min read",
+    "author": "Sneha Baheti"
+  },
+  {
+    "id": 4,
+    "cat": "Market",
+    "title": "Sector V vs New Town: where should you lease in 2026?",
+    "img": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&h=400&q=80",
+    "excerpt": "Comparative analysis of Kolkata top commercial tech business corridors for IT and corporate tenants.",
+    "content": "While Sector V offers established enterprise infrastructure and seamless metro connectivity, New Town provides Grade-A modern IT parks like Mani Casadona and Ecospace with superior parking, greener environments, wider access roads, and competitive rental yields.",
+    "date": "2026-09-28",
+    "readTime": "7 min read",
+    "author": "Research Desk"
+  },
+  {
+    "id": 5,
+    "cat": "Market",
+    "title": "Understanding rental yields in premium IT parks",
+    "img": "https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?auto=format&fit=crop&w=600&h=400&q=80",
+    "excerpt": "How institutional and private investors calculate net rental returns in commercial IT assets.",
+    "content": "Commercial IT parks in Kolkata consistently generate 7.5% - 8.5% gross rental yields, significantly higher than residential yields of 2.5% - 3%. Factors include creditworthy corporate tenants, long-term 9-year lease commitments, and built-in periodic rent appreciations.",
+    "date": "2026-09-20",
+    "readTime": "5 min read",
+    "author": "Nitin Baheti"
+  },
+  {
+    "id": 6,
+    "cat": "Interior",
+    "title": "Office interior costing: bare shell to move-in ready",
+    "img": "https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=600&h=400&q=80",
+    "excerpt": "Budgeting guide for civil work, MEP, acoustic panels, and ergonomic furniture installations.",
+    "content": "Transforming a bare shell commercial office into a productive workplace requires detailed budgeting across HVAC, electrical distribution, fire fighting systems, network cabling, glazed acoustic partitions, and ergonomic modular workstations. Expect ₹1,800 to ₹3,500 per sq.ft depending on specifications.",
+    "date": "2026-09-12",
+    "readTime": "8 min read",
+    "author": "Design Studio"
+  }
+]

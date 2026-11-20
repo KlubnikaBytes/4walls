@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { maniCasadonaOptions } from '../utils/maniCasadonaData';
 import { ecospaceOptions } from '../utils/ecospaceData';
+import { fetchPropertiesApi, resolveMediaUrl } from '../utils/api';
+import { useWebSocket } from '../utils/useWebSocket';
 
 export default function Properties() {
-  const allProperties = [
+  const initialProperties = [
     ...maniCasadonaOptions.map(p => ({ ...p, building: "Mani Casadona", imageFolder: "/manicasadona" })),
     ...ecospaceOptions.map(p => ({ ...p, building: "Ecospace", imageFolder: "/ecospace" }))
   ];
 
+  const [allProperties, setAllProperties] = useState(initialProperties);
   const [activeBuilding, setActiveBuilding] = useState('All');
   const [activeSize, setActiveSize] = useState('All');
   
@@ -17,6 +20,65 @@ export default function Properties() {
   // Modal State
   const [selectedOpt, setSelectedOpt] = useState(null);
   const [zoomedIndex, setZoomedIndex] = useState(null);
+
+  // Load properties dynamically
+  const loadProperties = useCallback(async () => {
+    try {
+      const res = await fetchPropertiesApi();
+      if (res.data && res.data.properties) {
+        const combined = [];
+        Object.keys(res.data.properties).forEach(bldg => {
+          const folderPrefix = bldg === 'Mani Casadona' ? '/manicasadona' : bldg === 'Ecospace' ? '/ecospace' : '/uploads';
+          (res.data.properties[bldg] || []).forEach(p => {
+            combined.push({
+              ...p,
+              building: bldg,
+              imageFolder: folderPrefix
+            });
+          });
+        });
+        if (combined.length > 0) {
+          setAllProperties(combined);
+        }
+      }
+    } catch (err) {
+      console.log('Using static properties fallback');
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  // WebSocket live updates
+  const handleWs = useCallback((msg) => {
+    if (msg.type === 'PROPERTIES_UPDATED') {
+      const combined = [];
+      Object.keys(msg.payload.properties || {}).forEach(bldg => {
+        const folderPrefix = bldg === 'Mani Casadona' ? '/manicasadona' : bldg === 'Ecospace' ? '/ecospace' : '/uploads';
+        (msg.payload.properties[bldg] || []).forEach(p => {
+          combined.push({
+            ...p,
+            building: bldg,
+            imageFolder: folderPrefix
+          });
+        });
+      });
+      if (combined.length > 0) {
+        setAllProperties(combined);
+      }
+    }
+  }, []);
+
+  useWebSocket(handleWs);
+
+  const getMediaUrl = (prop, imgName) => {
+    if (!imgName) return '/hero.png';
+    if (imgName.startsWith('/') || imgName.startsWith('http')) return resolveMediaUrl(imgName);
+    return `${prop.imageFolder}/${prop.folder}/${imgName}`;
+  };
+
+  const buildingOptions = ['All', ...Array.from(new Set(allProperties.map(p => p.building)))];
 
   const filteredList = allProperties.filter(p => {
     let matchBuilding = true;
@@ -63,7 +125,7 @@ export default function Properties() {
         />
       );
     }
-    return <img src={src} alt={alt} {...props} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer', ...props.style }} />;
+    return <img src={src} alt={alt} onError={(e) => { e.target.src = '/hero.png'; }} {...props} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer', ...props.style }} />;
   };
 
   // Prevent scrolling when mobile filter is open
@@ -142,7 +204,7 @@ export default function Properties() {
             left: 0;
             right: 0;
             top: auto;
-            background: #1a2220; /* Slightly lighter than var(--ink) */
+            background: #1a2220;
             z-index: 2000;
             padding: 32px 24px 48px;
             border-top: 1px solid rgba(255,255,255,0.1);
@@ -193,7 +255,7 @@ export default function Properties() {
             border-radius: 40px;
             font-size: 15px;
             font-weight: 600;
-            z-index: 1998; /* Below overlay */
+            z-index: 1998;
             box-shadow: 0 8px 24px rgba(31, 149, 164, 0.4);
             align-items: center;
             gap: 8px;
@@ -201,72 +263,79 @@ export default function Properties() {
           }
         }
       `}</style>
-      
-      {/* Premium Header */}
-      <section style={{ paddingTop: '80px', paddingBottom: '40px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+
+      {/* Header section */}
+      <section style={{ paddingTop: '64px', paddingBottom: '32px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
-          <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Property Portfolio</div>
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', maxWidth: '800px', lineHeight: 1.1, color: '#fff', marginTop: '16px' }}>Discover Your Next Workspace.</h2>
-          <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '600px', marginTop: '24px', fontSize: '18px' }}>
-            Explore premium commercial properties across Kolkata's top IT hubs. View detailed amenities, workstation capacities, and high-res galleries.
+          <div className="eyebrow" style={{ color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Property Catalog</div>
+          <h2 style={{ fontSize: '42px', maxWidth: '800px', lineHeight: 1.1, color: '#fff', marginTop: '16px' }}>
+            Find the right commercial space for your enterprise.
+          </h2>
+          <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '600px', marginTop: '16px', fontSize: '16px' }}>
+            Explore verified office spaces across New Town and Sector V with real-time availability.
           </p>
         </div>
       </section>
 
-      {/* Main Layout with Sidebar */}
+      {/* Main content with sidebar and listings */}
       <div className="prop-layout">
         
-        {/* Mobile Filter Overlay */}
+        {/* Mobile Overlay */}
         <div 
-          className={`mobile-filter-overlay ${isMobileFilterOpen ? 'open' : ''}`} 
+          className={`mobile-filter-overlay ${isMobileFilterOpen ? 'open' : ''}`}
           onClick={() => setIsMobileFilterOpen(false)}
         />
 
-        {/* Sidebar Filters (Bottom Sheet on Mobile) */}
+        {/* Sidebar Filter */}
         <div className={`prop-sidebar ${isMobileFilterOpen ? 'open' : ''}`}>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} className="mobile-only-header">
-            <h3 style={{ fontSize: '20px', margin: 0 }}>Filters</h3>
-            {/* Close button only visible on mobile, achievable via media queries or just inline style since it's inside the sheet */}
+          {/* Close button for mobile sheet */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <h3 style={{ fontSize: '18px', color: '#fff', margin: 0 }}>Filters</h3>
             <button 
               onClick={() => setIsMobileFilterOpen(false)}
-              style={{ background: 'transparent', border: 'none', color: '#fff', fontSize: '24px', cursor: 'pointer', display: window.innerWidth <= 768 ? 'block' : 'none' }}
+              style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.6)', fontSize: '24px', cursor: 'pointer', display: isMobileFilterOpen ? 'block' : 'none' }}
             >✕</button>
           </div>
 
           <div>
-            <h4 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.5)', marginBottom: '16px' }}>Building</h4>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--brass)', marginBottom: '16px', fontWeight: 600 }}>
+              Building / Complex
+            </div>
             <div className="filter-group-buttons">
-              {['All', 'Mani Casadona', 'Ecospace'].map(b => (
-                <button 
-                  key={b}
-                  onClick={() => {
-                    setActiveBuilding(b);
-                    // Don't auto-close on selection to allow multiple changes
-                  }}
-                  className={`filter-btn ${activeBuilding === b ? 'active' : ''}`}
-                >{b === 'All' ? 'All Buildings' : b}</button>
+              {buildingOptions.map(bldg => (
+                <button
+                  key={bldg}
+                  className={`filter-btn ${activeBuilding === bldg ? 'active' : ''}`}
+                  onClick={() => setActiveBuilding(bldg)}
+                >
+                  {bldg}
+                </button>
               ))}
             </div>
           </div>
 
           <div>
-            <h4 style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'rgba(255,255,255,0.5)', marginBottom: '16px' }}>Size</h4>
+            <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '1px', color: 'var(--brass)', marginBottom: '16px', fontWeight: 600 }}>
+              Floor Area (sq.ft)
+            </div>
             <div className="filter-group-buttons">
-              {['All', '< 2000 sq.ft', '> 2000 sq.ft'].map(s => (
-                <button 
-                  key={s}
-                  onClick={() => setActiveSize(s)}
-                  className={`filter-btn ${activeSize === s ? 'active' : ''}`}
-                >{s === 'All' ? 'All Sizes' : s}</button>
+              {['All', '< 2000 sq.ft', '> 2000 sq.ft'].map(size => (
+                <button
+                  key={size}
+                  className={`filter-btn ${activeSize === size ? 'active' : ''}`}
+                  onClick={() => setActiveSize(size)}
+                >
+                  {size}
+                </button>
               ))}
             </div>
           </div>
-          
-          {/* Apply button for mobile */}
+
+          {/* Direct trigger to close filters on mobile */}
           <button 
             className="btn-brass" 
-            style={{ width: '100%', marginTop: '16px', display: window.innerWidth <= 768 ? 'block' : 'none' }}
+            style={{ width: '100%', marginTop: '16px', display: isMobileFilterOpen ? 'block' : 'none' }}
             onClick={() => setIsMobileFilterOpen(false)}
           >Show {filteredList.length} Properties</button>
         </div>
@@ -306,7 +375,7 @@ export default function Properties() {
                 onClick={() => setSelectedOpt(p)}
               >
                 <div style={{ height: '240px', position: 'relative' }}>
-                  {renderMedia(`${p.imageFolder}/${p.folder}/${p.images[0]}`, p.name, { style: { width: '100%', height: '100%', objectFit: 'cover' } })}
+                  {renderMedia(getMediaUrl(p, p.images?.[0] || '1.jpg'), p.name, { style: { width: '100%', height: '100%', objectFit: 'cover' } })}
                   <span style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(0,0,0,0.7)', color: '#fff', padding: '4px 12px', borderRadius: '4px', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.05em', border: '1px solid rgba(255,255,255,0.2)' }}>
                     {p.building}
                   </span>
@@ -380,14 +449,12 @@ export default function Properties() {
                 </div>
               </div>
 
-              <h4 className="mc-gallery-title">Property Gallery</h4>
+              <h4 className="mc-gallery-title">Property Gallery ({selectedOpt.images?.length || 0})</h4>
               <div className="mc-gallery">
-                {selectedOpt.images.map((img, idx) => (
-                  renderMedia(`${selectedOpt.imageFolder}/${selectedOpt.folder}/${img}`, `${selectedOpt.name} - ${idx}`, {
-                    key: idx,
-                    onClick: () => setZoomedIndex(idx),
-                    style: { cursor: 'zoom-in', borderRadius: '8px', border: '1px solid var(--line)' }
-                  })
+                {(selectedOpt.images || []).map((img, idx) => (
+                  <div key={idx} className="mc-gallery-item" onClick={() => setZoomedIndex(idx)}>
+                    {renderMedia(getMediaUrl(selectedOpt, img), `${selectedOpt.name} - ${idx}`, {})}
+                  </div>
                 ))}
               </div>
             </div>
@@ -397,31 +464,18 @@ export default function Properties() {
 
       {/* Lightbox for Zoomed Image with Slider */}
       {zoomedIndex !== null && selectedOpt && (
-        <div className="mc-lightbox" onClick={() => setZoomedIndex(null)} style={{ zIndex: 9999 }}>
-          <button className="mc-close-btn light" onClick={() => setZoomedIndex(null)} style={{ color: '#fff' }}>✕</button>
+        <div className="mc-lightbox" onClick={() => setZoomedIndex(null)}>
+          <button className="mc-close-btn light" onClick={() => setZoomedIndex(null)}>✕</button>
           
           <button className="mc-lightbox-nav prev" onClick={handlePrevZoom}>‹</button>
           
-          {selectedOpt.images[zoomedIndex].endsWith('.mp4') ? (
-            <video 
-              src={`${selectedOpt.imageFolder}/${selectedOpt.folder}/${selectedOpt.images[zoomedIndex]}`} 
-              controls 
-              autoPlay 
-              style={{ maxHeight: '90vh', maxWidth: '90vw' }} 
-              onClick={(e) => e.stopPropagation()} 
-            />
-          ) : (
-            <img 
-              src={`${selectedOpt.imageFolder}/${selectedOpt.folder}/${selectedOpt.images[zoomedIndex]}`} 
-              alt="Zoomed view" 
-              onClick={(e) => e.stopPropagation()} 
-              style={{ maxHeight: '90vh', maxWidth: '90vw', objectFit: 'contain' }}
-            />
-          )}
+          <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: '90%', maxHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {renderMedia(getMediaUrl(selectedOpt, selectedOpt.images[zoomedIndex]), "Zoomed view", { style: { maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' } })}
+          </div>
           
           <button className="mc-lightbox-nav next" onClick={handleNextZoom}>›</button>
           
-          <div className="mc-lightbox-count" style={{ color: '#fff' }}>
+          <div className="mc-lightbox-count">
             {zoomedIndex + 1} / {selectedOpt.images.length}
           </div>
         </div>

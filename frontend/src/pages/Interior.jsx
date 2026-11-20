@@ -1,12 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { interiorAssets } from '../utils/interiorData';
+import { fetchInteriorApi, resolveMediaUrl } from '../utils/api';
+import { useWebSocket } from '../utils/useWebSocket';
 
 export default function Interior() {
+  const [assets, setAssets] = useState(interiorAssets);
   const [heroIndex, setHeroIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
-  const videoAsset = interiorAssets.find(a => a.type === 'video');
-  const imageAssets = interiorAssets.filter(a => a.type === 'image');
+  // Load interior media dynamically
+  const loadInterior = useCallback(async () => {
+    try {
+      const res = await fetchInteriorApi();
+      if (res.data && res.data.length > 0) {
+        setAssets(res.data);
+      }
+    } catch (err) {
+      console.log('Using static interior fallback');
+    }
+  }, []);
+
+  useEffect(() => {
+    loadInterior();
+  }, [loadInterior]);
+
+  // WebSocket listener
+  const handleWs = useCallback((msg) => {
+    if (msg.type === 'INTERIOR_UPDATED') {
+      if (msg.payload && msg.payload.length > 0) {
+        setAssets(msg.payload);
+      }
+    }
+  }, []);
+
+  useWebSocket(handleWs);
+
+  const videoAsset = assets.find(a => a.type === 'video');
+  const imageAssets = assets.filter(a => a.type !== 'video');
   const heroImages = imageAssets.slice(0, 5);
 
   useEffect(() => {
@@ -44,19 +74,19 @@ export default function Interior() {
   const handleNextZoom = (e) => {
     e.stopPropagation();
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex + 1) % interiorAssets.length);
+      setLightboxIndex((lightboxIndex + 1) % assets.length);
     }
   };
 
   const handlePrevZoom = (e) => {
     e.stopPropagation();
     if (lightboxIndex !== null) {
-      setLightboxIndex((lightboxIndex - 1 + interiorAssets.length) % interiorAssets.length);
+      setLightboxIndex((lightboxIndex - 1 + assets.length) % assets.length);
     }
   };
 
   const openLightbox = (path) => {
-    const idx = interiorAssets.findIndex(a => a.path === path);
+    const idx = assets.findIndex(a => a.path === path);
     if (idx !== -1) setLightboxIndex(idx);
   };
 
@@ -344,7 +374,7 @@ export default function Interior() {
           <img 
             key={idx}
             className="hero-slide-bg" 
-            src={img.path} 
+            src={resolveMediaUrl(img.path)} 
             alt="Hero background"
             style={{ opacity: heroIndex === idx ? 1 : 0 }}
           />
@@ -378,36 +408,36 @@ export default function Interior() {
           if (item.type === 'video') {
             return (
               <div key={`vid-${i}`} className="interior-item" onClick={() => openLightbox(item.path)}>
-                <video src={item.path} autoPlay loop muted playsInline />
+                <video src={resolveMediaUrl(item.path)} autoPlay loop muted playsInline />
               </div>
             );
           }
 
           return (
             <div key={`img-${i}`} className="interior-item" onClick={() => openLightbox(item.path)}>
-              <img src={item.path} alt={`Interior design ${i}`} loading="lazy" />
+              <img src={resolveMediaUrl(item.path)} alt={`Interior design ${i}`} loading="lazy" />
             </div>
           );
         })}
       </div>
 
       {/* Lightbox for zooming */}
-      {lightboxIndex !== null && (
+      {lightboxIndex !== null && assets[lightboxIndex] && (
         <div className="mc-lightbox" onClick={() => setLightboxIndex(null)}>
           <button className="mc-close-btn" onClick={() => setLightboxIndex(null)}>✕</button>
           <button className="mc-lightbox-nav prev" onClick={handlePrevZoom}>‹</button>
           
           <div onClick={(e) => e.stopPropagation()}>
-            {interiorAssets[lightboxIndex].type === 'video' ? (
+            {assets[lightboxIndex].type === 'video' ? (
               <video 
-                src={interiorAssets[lightboxIndex].path} 
+                src={resolveMediaUrl(assets[lightboxIndex].path)} 
                 className="mc-lightbox-content"
                 controls 
                 autoPlay 
               />
             ) : (
               <img 
-                src={interiorAssets[lightboxIndex].path} 
+                src={resolveMediaUrl(assets[lightboxIndex].path)} 
                 alt="Zoomed interior" 
                 className="mc-lightbox-content"
               />
@@ -416,7 +446,7 @@ export default function Interior() {
           
           <button className="mc-lightbox-nav next" onClick={handleNextZoom}>›</button>
           <div className="mc-lightbox-count">
-            {lightboxIndex + 1} / {interiorAssets.length}
+            {lightboxIndex + 1} / {assets.length}
           </div>
         </div>
       )}

@@ -1578,6 +1578,12 @@ section {
 }
 
 @media (max-width: 480px) {
+  .site-header {
+    padding: 10px 14px;
+  }
+  .site-header.scrolled {
+    padding: 8px 14px;
+  }
   .mc-gallery {
     grid-template-columns: 1fr;
   }

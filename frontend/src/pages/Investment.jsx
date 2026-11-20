@@ -1,13 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { maniCasadonaOptions } from '../utils/maniCasadonaData';
 import { ecospaceOptions } from '../utils/ecospaceData';
+import { fetchPropertiesApi, resolveMediaUrl } from '../utils/api';
+import { useWebSocket } from '../utils/useWebSocket';
 
 export default function Investment() {
-  const allProperties = [
+  const initialProperties = [
     ...maniCasadonaOptions.map(p => ({ ...p, building: "Mani Casadona", buildingPath: "/mani-casadona", imageFolder: "/manicasadona", yield: "7.8%" })),
     ...ecospaceOptions.map(p => ({ ...p, building: "Ecospace", buildingPath: "/ecospace", imageFolder: "/ecospace", yield: "8.2%" }))
   ];
+
+  const [allProperties, setAllProperties] = useState(initialProperties);
+
+  const loadProperties = useCallback(async () => {
+    try {
+      const res = await fetchPropertiesApi();
+      if (res.data && res.data.properties) {
+        const combined = [];
+        Object.keys(res.data.properties).forEach(bldg => {
+          const folderPrefix = bldg === 'Mani Casadona' ? '/manicasadona' : bldg === 'Ecospace' ? '/ecospace' : '/uploads';
+          const path = bldg === 'Mani Casadona' ? '/mani-casadona' : bldg === 'Ecospace' ? '/ecospace' : '/properties';
+          (res.data.properties[bldg] || []).forEach((p, idx) => {
+            combined.push({
+              ...p,
+              building: bldg,
+              buildingPath: path,
+              imageFolder: folderPrefix,
+              yield: idx % 2 === 0 ? '7.8%' : '8.2%'
+            });
+          });
+        });
+        if (combined.length > 0) {
+          setAllProperties(combined);
+        }
+      }
+    } catch (e) {
+      console.log('Using static investment fallback');
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  const handleWs = useCallback((msg) => {
+    if (msg.type === 'PROPERTIES_UPDATED') {
+      const combined = [];
+      Object.keys(msg.payload.properties || {}).forEach(bldg => {
+        const folderPrefix = bldg === 'Mani Casadona' ? '/manicasadona' : bldg === 'Ecospace' ? '/ecospace' : '/uploads';
+        const path = bldg === 'Mani Casadona' ? '/mani-casadona' : bldg === 'Ecospace' ? '/ecospace' : '/properties';
+        (msg.payload.properties[bldg] || []).forEach((p, idx) => {
+          combined.push({
+            ...p,
+            building: bldg,
+            buildingPath: path,
+            imageFolder: folderPrefix,
+            yield: idx % 2 === 0 ? '7.8%' : '8.2%'
+          });
+        });
+      });
+      if (combined.length > 0) {
+        setAllProperties(combined);
+      }
+    }
+  }, []);
+
+  useWebSocket(handleWs);
+
+  const getMediaUrl = (p, imgName) => {
+    if (!imgName) return '/hero.png';
+    if (imgName.startsWith('/') || imgName.startsWith('http')) return resolveMediaUrl(imgName);
+    return `${p.imageFolder}/${p.folder}/${imgName}`;
+  };
 
   return (
     <div style={{ background: 'var(--ink)', color: 'var(--white)', minHeight: '100vh', paddingBottom: '80px' }}>
@@ -48,7 +113,7 @@ export default function Investment() {
                 width: '100%', 
                 height: '140px', 
                 borderRadius: '8px', 
-                backgroundImage: `url('${p.imageFolder}/${p.folder}/${p.images[0]}')`, 
+                backgroundImage: `url('${getMediaUrl(p, p.images?.[0] || '1.jpg')}')`, 
                 backgroundSize: 'cover', 
                 backgroundPosition: 'center',
                 boxShadow: '0 8px 20px rgba(0,0,0,0.4)'
@@ -73,28 +138,11 @@ export default function Investment() {
                   <div style={{ fontSize: '32px', color: 'var(--brass)', fontWeight: 500 }}>{p.yield}</div>
                 </div>
                 <div>
-                  <div style={{ fontSize: '11px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.5)', letterSpacing: '1px', marginBottom: '4px' }}>Est. Rent</div>
-                  <div style={{ fontSize: '16px', color: '#fff' }}>{p.rent}</div>
+                  <span className="btn-brass" style={{ padding: '8px 16px', fontSize: '13px' }}>View Details →</span>
                 </div>
               </div>
-
             </Link>
           ))}
-        </div>
-      </section>
-
-      <section style={{ paddingTop: '64px', borderTop: 'none', paddingBottom: 0 }}>
-        <div className="quote-row" style={{ gridTemplateColumns: '1fr 1fr' }}>
-          <div className="quote" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Case Study</span>
-            <p style={{ color: '#fff' }}>"Helped a Sector V tenant scale from 2,000 to 5,000 sqft without breaking their lease terms, securing a 9% return for the new owner."</p>
-            <div className="who" style={{ color: 'rgba(255,255,255,0.5)' }}>Problem → Solution → Result</div>
-          </div>
-          <div className="quote" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <span className="eyebrow" style={{ marginBottom: '8px', color: 'var(--brass)', borderColor: 'rgba(31, 149, 164, 0.4)' }}>Tool</span>
-            <p style={{ color: '#fff' }}>Rental yield calculator — estimate returns on any commercial asset before you commit to the purchase.</p>
-            <div className="who" style={{ color: 'rgba(255,255,255,0.5)' }}>Open calculator →</div>
-          </div>
         </div>
       </section>
     </div>

@@ -1,9 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ecospaceOptions } from '../utils/ecospaceData';
+import { fetchBuildingPropertiesApi, resolveMediaUrl } from '../utils/api';
+import { useWebSocket } from '../utils/useWebSocket';
 
 export default function Ecospace() {
+  const [options, setOptions] = useState(ecospaceOptions);
   const [selectedOpt, setSelectedOpt] = useState(null);
   const [zoomedIndex, setZoomedIndex] = useState(null);
+
+  // Load properties from backend
+  const loadProperties = useCallback(async () => {
+    try {
+      const res = await fetchBuildingPropertiesApi('Ecospace');
+      if (res.items && res.items.length > 0) {
+        setOptions(res.items);
+      }
+    } catch (err) {
+      console.log('Using static Ecospace data fallback');
+    }
+  }, []);
+
+  useEffect(() => {
+    loadProperties();
+  }, [loadProperties]);
+
+  // WebSocket listener
+  const handleWs = useCallback((msg) => {
+    if (msg.type === 'PROPERTIES_UPDATED') {
+      const items = msg.payload?.properties?.['Ecospace'];
+      if (items) {
+        setOptions(items);
+      }
+    }
+  }, []);
+
+  useWebSocket(handleWs);
+
+  const getMediaSrc = (folder, img) => {
+    if (!img) return '/hero.png';
+    if (img.startsWith('/') || img.startsWith('http')) return resolveMediaUrl(img);
+    return `/ecospace/${folder}/${img}`;
+  };
 
   const handleNextZoom = (e) => {
     e.stopPropagation();
@@ -33,7 +70,7 @@ export default function Ecospace() {
         />
       );
     }
-    return <img src={src} alt={alt} {...props} />;
+    return <img src={src} alt={alt} onError={(e) => { e.target.src = '/hero.png'; }} {...props} />;
   };
 
   return (
@@ -44,27 +81,29 @@ export default function Ecospace() {
       </div>
 
       <div className="mc-grid">
-        {ecospaceOptions.map((opt) => (
-          <div 
-            className="mc-card hover-card" 
-            key={opt.id}
-            onClick={() => setSelectedOpt(opt)}
-          >
-            <div className="mc-card-thumb">
-              {/* Show the first image as the thumbnail */}
-              {renderMedia(`/ecospace/${opt.folder}/${opt.images[0]}`, opt.name, {})}
-              <div className="mc-card-tag">{opt.size}</div>
-            </div>
-            <div className="mc-card-body">
-              <h3 className="opt-title">{opt.name}</h3>
-              <p className="opt-price">{opt.rent} / month</p>
-              <div className="opt-quick-meta">
-                <span>{opt.workstation} Workstations</span> • <span>{opt.cabin} Cabins</span>
+        {options.map((opt) => {
+          const firstImg = opt.images?.[0] || '1.jpg';
+          return (
+            <div 
+              className="mc-card hover-card" 
+              key={opt.id}
+              onClick={() => setSelectedOpt(opt)}
+            >
+              <div className="mc-card-thumb">
+                {renderMedia(getMediaSrc(opt.folder, firstImg), opt.name, {})}
+                <div className="mc-card-tag">{opt.size}</div>
               </div>
-              <button className="mc-btn-view">View Details</button>
+              <div className="mc-card-body">
+                <h3 className="opt-title">{opt.name}</h3>
+                <p className="opt-price">{opt.rent} / month</p>
+                <div className="opt-quick-meta">
+                  <span>{opt.workstation} Workstations</span> • <span>{opt.cabin} Cabins</span>
+                </div>
+                <button className="mc-btn-view">View Details</button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Property Details Modal */}
@@ -110,13 +149,12 @@ export default function Ecospace() {
                 </div>
               </div>
 
-              <h4 className="mc-gallery-title">Property Gallery</h4>
+              <h4 className="mc-gallery-title">Property Gallery ({selectedOpt.images?.length || 0})</h4>
               <div className="mc-gallery">
-                {selectedOpt.images.map((img, idx) => (
-                  renderMedia(`/ecospace/${selectedOpt.folder}/${img}`, `${selectedOpt.name} - ${idx}`, {
-                    key: idx,
-                    onClick: () => setZoomedIndex(idx)
-                  })
+                {(selectedOpt.images || []).map((img, idx) => (
+                  <div key={idx} className="mc-gallery-item" onClick={() => setZoomedIndex(idx)}>
+                    {renderMedia(getMediaSrc(selectedOpt.folder, img), `${selectedOpt.name} - ${idx}`, {})}
+                  </div>
                 ))}
               </div>
             </div>
@@ -131,21 +169,9 @@ export default function Ecospace() {
           
           <button className="mc-lightbox-nav prev" onClick={handlePrevZoom}>‹</button>
           
-          {selectedOpt.images[zoomedIndex].endsWith('.mp4') ? (
-            <video 
-              src={`/ecospace/${selectedOpt.folder}/${selectedOpt.images[zoomedIndex]}`} 
-              controls 
-              autoPlay 
-              style={{ maxHeight: '90vh', maxWidth: '90vw' }} 
-              onClick={(e) => e.stopPropagation()} 
-            />
-          ) : (
-            <img 
-              src={`/ecospace/${selectedOpt.folder}/${selectedOpt.images[zoomedIndex]}`} 
-              alt="Zoomed view" 
-              onClick={(e) => e.stopPropagation()} 
-            />
-          )}
+          <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: '90%', maxHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {renderMedia(getMediaSrc(selectedOpt.folder, selectedOpt.images[zoomedIndex]), "Zoomed view", { style: { maxWidth: '100%', maxHeight: '80vh', objectFit: 'contain' } })}
+          </div>
           
           <button className="mc-lightbox-nav next" onClick={handleNextZoom}>›</button>
           

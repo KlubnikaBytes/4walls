@@ -50,3 +50,5 @@ My Office units - Copy/
 Interior Designing/
 OFFICE DETALS ECOSPACE 4WALLS/
 OFFICE DETALS MANICASADONA 4WALLS/
+backend/uploads/*
+!backend/uploads/.gitkeep

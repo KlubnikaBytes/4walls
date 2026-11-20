@@ -1,0 +1,21 @@
+{
+  "heading": "We don't just broker properties—we build lasting value through expertise, integrity, and execution.",
+  "p1": "Founded with the vision to simplify commercial real estate in Kolkata. We provide end-to-end solutions from finding the right bare shell space to designing and delivering a fully functional, inspiring workplace for your team.",
+  "p2": "Together with a dedicated team, 4Walls Property Solutions delivers trusted expertise in commercial leasing, sales, investments, interiors, and asset management.",
+  "leaders": [
+    {
+      "id": 1,
+      "name": "Nitin Baheti",
+      "role": "Managing Director | 4Walls Property Solutions",
+      "image": "/team/nitin.jpg",
+      "bio": "With over 20 years of experience in commercial real estate, Nitin Baheti founded 4Walls Property Solutions to provide end-to-end commercial real estate solutions. He has successfully developed 10+ commercial office assets and advised clients on the leasing, sale, investment, and management of 100+ commercial properties, with expertise in commercial interiors and workspace planning. He is also passionate about interior designing and workspace aesthetics."
+    },
+    {
+      "id": 2,
+      "name": "Sneha Baheti",
+      "role": "Director | 4Walls Property Solutions",
+      "image": "/team/sneha.jpg",
+      "bio": "With over 15 years of experience at TCS, ICICI Bank, and other leading organisations, Sneha Baheti leads business operations and client relationships at 4Walls. Her focus on operational excellence and customer experience ensures seamless delivery across every project."
+    }
+  ]
+}

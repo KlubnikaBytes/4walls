@@ -157,6 +157,7 @@ export default function Footer() {
             <ul className="footer-list">
               <li><Link to="/privacy">Privacy Policy</Link></li>
               <li><Link to="/terms">Terms of Use</Link></li>
+              <li><Link to="/admin" style={{ opacity: 0.7 }}>Admin Portal</Link></li>
             </ul>
           </div>
           <div>
